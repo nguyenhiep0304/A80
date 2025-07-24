@@ -122,18 +122,18 @@ onMounted(() => {
 
   // Thiết lập bản đồ
   const bounds = L.latLngBounds([
-    [20.9, 105.7],
-    [21.2, 106.0],
+    [20.995, 105.78],
+    [21.08, 105.91],
   ])
 
   const mapInstance = L.map('map', {
     maxBounds: bounds,
     maxBoundsViscosity: 1.0,
-  }).setView([21.0285, 105.8542], 13)
+  }).setView([21.037042159870733, 105.8358108494083], 16)
 
   map.value = mapInstance
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     maxZoom: 18,
     minZoom: 12,
   }).addTo(mapInstance)
