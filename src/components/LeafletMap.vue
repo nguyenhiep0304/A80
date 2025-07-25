@@ -10,7 +10,7 @@
             <option value="none">Không hiển thị</option>
             <option value="toilets">Nhà vệ sinh</option>
             <option value="routes">Tuyến đường</option>
-            <option value="stations">Khán đài</option>
+            <option value="stations">Events</option>
           </select>
 
           <!-- Thông tin hiển thị -->
@@ -81,11 +81,33 @@ const iconThongNhat = L.icon({
   popupAnchor: [0, -32]
 })
 
+const iconTapKet = L.icon({
+  iconUrl: new URL('../assets/images/colordot.svg', import.meta.url).href,
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+  popupAnchor: [0, -32]
+})
+
+const iconXuatPhat = L.icon({
+  iconUrl: new URL('../assets/images/colordot_green.svg', import.meta.url).href,
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+  popupAnchor: [0, -32]
+})
+
 const importantPoints = [
   { name: 'Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
   { name: 'Lăng Bác', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
   { name: 'Nhà hát lớn', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
+  { name: 'Quan Ngua', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
+  { name: 'Cong vien Thong nhat', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
+  { name: 'Nha Hat Lon', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
+  { name: '', lat: 21.04768315572356, lng: 105.8374600288556, icon: iconXuatPhat },
+  { name: '', lat: 21.042377656187288, lng: 105.84257778478005, icon: iconXuatPhat },
+  { name: '', lat: 21.0406163137389, lng: 105.84203871714057, icon: iconXuatPhat },
+  { name: '', lat: 21.042745097846275, lng: 105.8329445473384, icon: iconXuatPhat },
+  { name: '', lat: 21.034805309573194, lng: 105.83926080516213, icon: iconXuatPhat },
 ]
 
 
