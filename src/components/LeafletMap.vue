@@ -10,7 +10,7 @@
             <option value="none">Không hiển thị</option>
             <option value="toilets">Nhà vệ sinh</option>
             <option value="routes">Tuyến đường</option>
-            <option value="stations">Events</option>
+            <option value="events">Events</option>
           </select>
 
           <!-- Thông tin hiển thị -->
@@ -24,8 +24,12 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            <div v-else-if="displayMode === 'events' && selectedName">
+              <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+            </div>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
-            <p v-else-if="displayMode === 'stations'">Đang hiển thị vị trí các khán đài.</p>
+            <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
           </div>
         </div>
       </transition>
@@ -39,7 +43,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 import toiletData from '../assets/data/toilets'
-import stationData from '../assets/data/stations'
+import eventData from '../assets/data/events'
 import routeData from '../assets/data/routes'
 
 
@@ -50,7 +54,7 @@ const selectedName = ref('')
 const selectedDescription = ref('')
 
 const toiletLayer = ref(null)
-const stationLayer = ref(null)
+const eventLayer = ref(null)
 const routeLayer = ref(L.layerGroup())
 
 const iconQuanNgua = L.icon({
@@ -96,13 +100,13 @@ const iconXuatPhat = L.icon({
 })
 
 const importantPoints = [
-  { name: 'Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
-  { name: 'Lăng Bác', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
-  { name: 'Nhà hát lớn', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
+  { name: 'Cung thể thao Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
+  { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
+  { name: 'Nhà hát Lớn Hà Nội', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
-  { name: 'Quan Ngua', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
-  { name: 'Cong vien Thong nhat', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
-  { name: 'Nha Hat Lon', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
+  { name: 'Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
+  { name: 'Công viên Thống Nhất', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
+  { name: 'Nhà hát Lớn Hà Nội', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
   { name: '', lat: 21.04768315572356, lng: 105.8374600288556, icon: iconXuatPhat },
   { name: '', lat: 21.042377656187288, lng: 105.84257778478005, icon: iconXuatPhat },
   { name: '', lat: 21.0406163137389, lng: 105.84203871714057, icon: iconXuatPhat },
@@ -123,6 +127,13 @@ const hideControlBar = () => {
 //Icon wc
 const toiletIcon = L.icon({
   iconUrl: new URL('../assets/images/wc icon.svg', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+})
+//Icon event
+const eventIcon = L.icon({
+  iconUrl: new URL('../assets/images/sankhau.svg', import.meta.url).href,
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
@@ -177,9 +188,17 @@ onMounted(() => {
       return marker
     })
   )
-  //Add stations
-  stationLayer.value = L.layerGroup(
-    stationData.map((item) => L.marker([item.lat, item.lng]).bindPopup(`<h3>${item.name}</h3><p>${item.description}</p>`))
+  //Add events
+  eventLayer.value = L.layerGroup(
+    eventData.map((item) => {
+      const marker = L.marker([item.lat, item.lng], { icon: eventIcon })
+      marker.on('click', () => {
+        selectedName.value = item.name
+        selectedDescription.value = item.description.replace(/,\s*/g, '<br>')
+        showControlBar.value = true
+      })
+      return marker
+    })
   )
   //Add routes
   routeData.forEach(route => {
@@ -211,7 +230,7 @@ watch(displayMode, (mode) => {
   selectedDescription.value = ''
   if (!mapInstance) return
 
-  ;[toiletLayer.value, stationLayer.value, routeLayer.value].forEach((layer) => {
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -219,8 +238,8 @@ watch(displayMode, (mode) => {
 
   if (mode === 'toilets' && toiletLayer.value) {
     toiletLayer.value.addTo(mapInstance)
-  } else if (mode === 'stations' && stationLayer.value) {
-    stationLayer.value.addTo(mapInstance)
+  } else if (mode === 'events' && eventLayer.value) {
+    eventLayer.value.addTo(mapInstance)
   } else if (mode === 'routes' && routeLayer.value) {
     routeLayer.value.addTo(mapInstance)
   }
@@ -242,13 +261,13 @@ watch(displayMode, (mode) => {
   align-items: flex-start;
   flex-direction: column;
   gap: 10px;
-  min-width: 70px;
   transition: min-width 0.3s ease;
   overflow: hidden;
 }
 
 .menu-control.expanded {
-  min-width: 360px;
+  min-height: 240px;
+  min-width: 240px;
   max-width: 360px;
 }
 
@@ -303,6 +322,11 @@ select {
   overflow-y: auto;
   max-height: 500px;
   
+}
+
+.info-box p{
+  text-align: left;
+  padding: 0.5rem;
 }
 
 .fade-enter-active,
