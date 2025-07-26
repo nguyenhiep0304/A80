@@ -194,7 +194,7 @@ onMounted(() => {
       const marker = L.marker([item.lat, item.lng], { icon: eventIcon })
       marker.on('click', () => {
         selectedName.value = item.name
-        selectedDescription.value = item.description.replace(/,\s*/g, '<br>')
+        selectedDescription.value = item.description.replace(/; \s*/g, '<br>')
         showControlBar.value = true
       })
       return marker
