@@ -36,7 +36,7 @@ export default [
   },
   {
     id: 4,
-    name: "Tuyen duong Thanh Nien → Lang Bac",
+    name: "Tuyến đường Thanh Niên → Lăng Bác",
     path: [
       [21.04768315572356, 105.8374600288556],
       [21.04688908917095, 105.83667145474907],
@@ -48,11 +48,11 @@ export default [
       [21.03104234582467, 105.83402216992856]
     ],
     color: "#00d812ff",
-    description: "Tuyen duong tu Chua Tran Quoc den Lang Bac"
+    description: "Tuyến đường từ Thanh Niên đến Lăng Bác"
   },
   {
     id: 5,
-    name: "Tuyen duong Quan Thanh → Lang Bac",
+    name: "Tuyến đường Quán Thánh → Lăng Bác",
     path: [
       [21.042377656187288, 105.84257778478005],
       [21.04279910380241, 105.840149438607],
@@ -63,11 +63,11 @@ export default [
       [21.03104234582467, 105.83402216992856]
     ],
     color: "#00d812ff",
-    description: "Tuyen duong tu Quan Thanh den Lang Bac"
+    description: "Tuyến đường từ Quán Thánh đến Lăng Bác"
   },
   {
     id: 6,
-    name: "Tuyen duong Phan Dinh Phung → Lang Bac",
+    name: "Tuyến đường Phan Đinh Phùng → Lăng Bác",
     path: [
       [21.0406163137389, 105.84203871714057],
       [21.041625599748166, 105.83620799388778],
@@ -75,11 +75,11 @@ export default [
       [21.03104234582467, 105.83402216992856]
     ],
     color: "#00d812ff",
-    description: "Tuyen duong tu Phan Dinh Phung den Lang Bac"
+    description: "Tuyến đường từ Phan Đinh Phùng đến Lăng Bác"
   },
   {
     id: 7,
-    name: "Tuyen duong Hoang Dieu → Lang Bac",
+    name: "Tuyến đường Hoàng Diệu → Lăng Bác",
     path: [
       [21.034805309573194, 105.83926080516213],
       [21.040956876206444, 105.84008876335942],
@@ -88,11 +88,11 @@ export default [
       [21.03104234582467, 105.83402216992856]
     ],
     color: "#00d812ff",
-    description: "Tuyen duong tu Hoang Dieu den Lang Bac"
+    description: "Tuyến đường từ Hoàng Diệu đến Lăng Bác"
   },
   {
     id: 8,
-    name: "Tuyen duong Thuy Khue → Lang Bac",
+    name: "Tuyến đường Thụy Khuê → Lăng Bác",
     path: [
       [21.042745097846275, 105.8329445473384],
       [21.042706208449268, 105.83589635807368],
@@ -102,6 +102,6 @@ export default [
       [21.03104234582467, 105.83402216992856]
     ],
     color: "#00d812ff",
-    description: "Tuyen duong tu Thuy Khue den Lang Bac"
+    description: "Tuyến đường từ Thụy Khuê đến Lăng Bác"
   },
 ];

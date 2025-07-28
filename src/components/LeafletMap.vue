@@ -10,7 +10,7 @@
             <option value="none">Không hiển thị</option>
             <option value="toilets">Nhà vệ sinh</option>
             <option value="routes">Tuyến đường</option>
-            <option value="events">Events</option>
+            <option value="events">Sự kiện</option>
           </select>
 
           <!-- Thông tin hiển thị -->
@@ -28,6 +28,7 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            <p v-else-if="displayMode === 'toilets'">Đang hiển thị WC sự kiện.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
           </div>
