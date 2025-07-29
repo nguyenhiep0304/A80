@@ -11,6 +11,7 @@
             <option value="toilets">Nhà vệ sinh</option>
             <option value="routes">Tuyến đường</option>
             <option value="events">Sự kiện</option>
+            <option value="leds">Bảng Led</option>
           </select>
 
           <!-- Thông tin hiển thị -->
@@ -28,9 +29,14 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            <div v-else-if="displayMode === 'leds' && selectedName">
+              <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+            </div>
             <p v-else-if="displayMode === 'toilets'">Đang hiển thị WC sự kiện.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
+            <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
           </div>
         </div>
       </transition>
@@ -45,6 +51,7 @@ import 'leaflet/dist/leaflet.css'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
+import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
 
 
@@ -56,6 +63,7 @@ const selectedDescription = ref('')
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
+const ledLayer = ref(null)
 const routeLayer = ref(L.layerGroup())
 
 const iconQuanNgua = L.icon({
@@ -140,6 +148,13 @@ const eventIcon = L.icon({
   popupAnchor: [0, -32],
 })
 
+const ledIcon = L.icon({
+  iconUrl: new URL('../assets/images/ledmonitor.svg', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+})
+
 // 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
 let controlContentEl = null
 
@@ -201,6 +216,18 @@ onMounted(() => {
       return marker
     })
   )
+  //Add led
+  ledLayer.value = L.layerGroup(
+    ledData.map((item) => {
+      const marker = L.marker([item.lat, item.lng], { icon: ledIcon })
+      marker.on('click', () => {
+        selectedName.value = item.name
+        selectedDescription.value = item.description.replace(/, \s*/g, '<br>')
+        showControlBar.value = true
+      })
+      return marker
+    })
+  )
   //Add routes
   routeData.forEach(route => {
     const polyline = L.polyline(route.path, {
@@ -231,7 +258,7 @@ watch(displayMode, (mode) => {
   selectedDescription.value = ''
   if (!mapInstance) return
 
-  ;[toiletLayer.value, eventLayer.value, routeLayer.value].forEach((layer) => {
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -243,6 +270,8 @@ watch(displayMode, (mode) => {
     eventLayer.value.addTo(mapInstance)
   } else if (mode === 'routes' && routeLayer.value) {
     routeLayer.value.addTo(mapInstance)
+  } else if (mode === 'leds' && ledLayer.value) {
+    ledLayer.value.addTo(mapInstance)
   }
 })
 </script>
