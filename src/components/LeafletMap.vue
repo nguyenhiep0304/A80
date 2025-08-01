@@ -1,25 +1,59 @@
 <template>
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
-    <div :class="['menu-control', { expanded: showControlBar }]">
-      <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button>
 
+    <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
+      <!-- Navigation bar -->
+      <div class="top-nav">
+        <div class="nav-bar">
+          <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
+          <div class="mode-buttons">
+            <button
+              style="width: 8rem; height: 2.4rem; margin: 0.6rem 0.6rem"
+              v-for = "mode in displayModes"
+              :key="mode.value"
+              :class="{active: displayMode == mode.value}"
+              @click = "displayMode = mode.value"
+            >{{ mode.label }}</button>
+          </div>
+        </div>
+      </div>
+
+    <div :class="['menu-control', { expanded: showControlBar }]">
+      
+      <!-- Nôi dung thông tin -->
       <transition name="fade">
         <div v-if="showControlBar" class="control-content">
-          <label for="displayMode">Chế độ hiển thị:</label>
+          <!-- <label for="displayMode">Chế độ hiển thị:</label>
           <select id="displayMode" v-model="displayMode">
             <option value="none">Không hiển thị</option>
             <option value="toilets">Nhà vệ sinh</option>
             <option value="routes">Tuyến đường</option>
             <option value="events">Sự kiện</option>
-            <option value="leds">Bảng Led</option>
-          </select>
+            <option value="leds">Màn hình Led</option>
+            <option value="phaos">Pháo hoa</option>
+          </select> -->
 
           <!-- Thông tin hiển thị -->
           <div class="info-box">
             <p v-if="displayMode === 'none'">Chưa chọn chế độ hiển thị.</p>
             <div v-else-if="displayMode === 'toilets' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
-              <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+              <table v-if="descriptionTableRows.length" class="description-table">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Tên địa điểm</th>
+                    <th>Địa chỉ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(row, index) in descriptionTableRows" :key="index">
+                    <td>{{ row.number }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.address }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div v-else-if="displayMode === 'routes' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
@@ -33,10 +67,15 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            <div v-else-if="displayMode === 'phaos' && selectedName">
+              <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+            </div>
             <p v-else-if="displayMode === 'toilets'">Đang hiển thị WC sự kiện.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
+            <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
           </div>
         </div>
       </transition>
@@ -45,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -53,6 +92,16 @@ import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
+import phaoData from '../assets/data/phaos'
+
+
+const displayModes = [
+  { label: 'Nhà vệ sinh', value: 'toilets' },
+  { label: 'Tuyến đường', value: 'routes' },
+  { label: 'Sự kiện', value: 'events' },
+  { label: 'Led', value: 'leds' },
+  { label: 'Pháo hoa', value: 'phaos' },
+]
 
 
 const map = ref(null)
@@ -64,6 +113,7 @@ const selectedDescription = ref('')
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
 const ledLayer = ref(null)
+const phaoLayer = ref(null)
 const routeLayer = ref(L.layerGroup())
 
 const iconQuanNgua = L.icon({
@@ -155,8 +205,15 @@ const ledIcon = L.icon({
   popupAnchor: [0, -32],
 })
 
+const phaoIcon = L.icon({
+  iconUrl: new URL('../assets/images/phaohoa.svg', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+})
+
 // 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
-let controlContentEl = null
+//let controlContentEl = null
 
 function stopWheelPropagation(event) {
   event.stopPropagation()
@@ -164,9 +221,17 @@ function stopWheelPropagation(event) {
 }
 
 onMounted(() => {
-  controlContentEl = document.querySelector('.control-content')
+  const controlContentEl = document.querySelector('.control-content')
   if (controlContentEl) {
-    controlContentEl.addEventListener('wheel', stopWheelPropagation, { passive: false })
+    controlContentEl.addEventListener('wheel', (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+    }, { passive: false })
+  }
+  const el = document.querySelector('control-content')
+  if (el) {
+    L.DomEvent.disableScrollPropagation(el)
+    L.DomEvent.disableClickPropagation(el)
   }
 
   // Thiết lập bản đồ
@@ -182,8 +247,8 @@ onMounted(() => {
 
   map.value = mapInstance
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 18,
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 17,
     minZoom: 12,
   }).addTo(mapInstance)
 
@@ -198,7 +263,7 @@ onMounted(() => {
       const marker = L.marker([item.lat, item.lng], { icon: toiletIcon })
       marker.on('click', () => {
         selectedName.value = item.name
-        selectedDescription.value = item.description.replace(/,\s*/g, '<br>')
+        selectedDescription.value = item.description
         showControlBar.value = true
       })
       return marker
@@ -228,6 +293,18 @@ onMounted(() => {
       return marker
     })
   )
+  //Add Phao hoa
+  phaoLayer.value = L.layerGroup(
+    phaoData.map((item) => {
+      const marker = L.marker([item.lat, item.lng], { icon: phaoIcon })
+      marker.on('click', () => {
+        selectedName.value = item.name
+        selectedDescription.value = item.description.replace(/; \s*/g, '<br>')
+        showControlBar.value = true
+      })
+      return marker
+    })
+  )
   //Add routes
   routeData.forEach(route => {
     const polyline = L.polyline(route.path, {
@@ -252,13 +329,25 @@ onMounted(() => {
 
 })
 
+const descriptionTableRows = computed(() => {
+  if (!selectedDescription.value) return []
+  const regex = /(\d+)\.([^:]+):\s*([^,]+)(?:,|$)/g
+  const matches = [...selectedDescription.value.matchAll(regex)]
+
+  return matches.map(match => ({
+    number: match[1].trim(),
+    name: match[2].trim(),
+    address: match[3].trim()
+  }))
+})
+
 watch(displayMode, (mode) => {
   const mapInstance = map.value
   selectedName.value = ''
   selectedDescription.value = ''
   if (!mapInstance) return
 
-  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value].forEach((layer) => {
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -272,6 +361,8 @@ watch(displayMode, (mode) => {
     routeLayer.value.addTo(mapInstance)
   } else if (mode === 'leds' && ledLayer.value) {
     ledLayer.value.addTo(mapInstance)
+  } else if (mode === 'phaos' && phaoLayer.value) {
+    phaoLayer.value.addTo(mapInstance)
   }
 })
 </script>
@@ -357,6 +448,78 @@ select {
 .info-box p{
   text-align: left;
   padding: 0.5rem;
+}
+
+.description-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.description-table th,
+.description-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.description-table thead {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.top-nav {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 6px 12px;
+  flex-wrap: wrap;
+}
+
+.menu-button {
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.menu-button:hover {
+  background-color: #357abd;
+}
+
+.mode-buttons button {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 500;
+}
+
+.mode-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.mode-buttons button:hover {
+  background-color: #ccc;
 }
 
 .fade-enter-active,
