@@ -1,6 +1,8 @@
 <template>
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
 
+    <img src="../assets/images/logoA80.png" alt="" class="logo">
+
     <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
       <!-- Navigation bar -->
       <div class="top-nav">
@@ -8,7 +10,7 @@
           <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
           <div class="mode-buttons">
             <button
-              style="width: 8rem; height: 2.4rem; margin: 0.6rem 0.6rem"
+              style="width: 8rem; height: 2.4rem; margin: 0.3rem 0.6rem"
               v-for = "mode in displayModes"
               :key="mode.value"
               :class="{active: displayMode == mode.value}"
@@ -96,11 +98,15 @@ import phaoData from '../assets/data/phaos'
 
 
 const displayModes = [
-  { label: 'Nhà vệ sinh', value: 'toilets' },
-  { label: 'Tuyến đường', value: 'routes' },
   { label: 'Sự kiện', value: 'events' },
-  { label: 'Led', value: 'leds' },
+
+  // { label: 'Tuyến đường', value: 'routes' },
+
   { label: 'Pháo hoa', value: 'phaos' },
+
+  // { label: 'Led', value: 'leds' },
+
+  { label: 'Nhà vệ sinh', value: 'toilets' },
 ]
 
 
@@ -243,6 +249,7 @@ onMounted(() => {
   const mapInstance = L.map('map', {
     maxBounds: bounds,
     maxBoundsViscosity: 1.0,
+    zoomControl: false,
   }).setView([21.037042159870733, 105.8358108494083], 16)
 
   map.value = mapInstance
@@ -470,9 +477,19 @@ select {
   font-weight: bold;
 }
 
+.logo {
+  position: absolute;
+  top: 2.6rem;
+  left: 3.6rem;
+  width: 3rem;
+  transform: scale(2.4);
+  height: auto;
+  z-index: 1001;
+}
+
 .top-nav {
   position: absolute;
-  top: 16px;
+  top: 2.6rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -504,23 +521,27 @@ select {
 }
 
 .mode-buttons button {
-  background-color: #e0e0e0;
+  background-color: #ff0000;
+  color: white;
   border: none;
   padding: 6px 10px;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
-  font-weight: 500;
+  font-weight: 400;
+  word-spacing: 0.2rem;
+  text-transform: uppercase;
 }
 
 .mode-buttons button.active {
-  background-color: #4caf50;
+  background-color: #af634c;
   color: white;
 }
 
 .mode-buttons button:hover {
-  background-color: #ccc;
+  background-color: #b48383;
 }
+
 
 .fade-enter-active,
 .fade-leave-active {

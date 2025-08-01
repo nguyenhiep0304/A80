@@ -1,9 +1,9 @@
 <template>
 <!-- File: HomePage.vue -->
     <div>
-        <!-- <img src="@/assets/logo.png" alt="Logo" /> -->
+        <img src="../assets/images/bandoUIBG.jpg" alt="Logo" />
         <div class="min-h-screen flex flex-col items justify-center bg-cover bg-center bg-no-repeat bg-fixed">
-            <button @click="goToMap" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded font-semibold main-button">GO TO MAP</button>
+            <button @click="goToMap" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded font-semibold main-button">BẮT ĐẦU KHÁM PHÁ</button>
         </div>
     </div>
 </template>
@@ -23,7 +23,13 @@ const router = useRouter();
         bottom: 5rem;
         transform: translate(-50%, 50%);
         font-size: 1.2rem;
+        color:white;
+        background-color: red;
+    }
 
+    img {
+        width: 100vw;
+        height: 99vh;
     }
 </style>
 
