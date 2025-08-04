@@ -1,7 +1,7 @@
 <template>
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
 
-    <img src="../assets/images/logoA80.png" alt="" class="logo">
+        <img src="../assets/images/logoA80.png" alt="" class="logo">
 
     <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
       <!-- Navigation bar -->
@@ -73,12 +73,14 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
-            <p v-else-if="displayMode === 'toilets'">Đang hiển thị WC sự kiện.</p>
+
+            <p v-else-if="displayMode === 'toilets'">Đang hiển thị nhà vệ sinh công cộng.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
             <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
           </div>
+          
         </div>
       </transition>
     </div>
@@ -95,12 +97,13 @@ import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
 import phaoData from '../assets/data/phaos'
+// import { events as rawEvents } from "../assets/data/events"
 
 
 const displayModes = [
   { label: 'Sự kiện', value: 'events' },
 
-  // { label: 'Tuyến đường', value: 'routes' },
+  //{ label: 'Tuyến đường', value: 'routes' },
 
   { label: 'Pháo hoa', value: 'phaos' },
 
@@ -115,6 +118,7 @@ const displayMode = ref('none')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
+// const showEvents = ref(false)
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -172,11 +176,12 @@ const importantPoints = [
   { name: 'Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
   { name: 'Công viên Thống Nhất', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
   { name: 'Nhà hát Lớn Hà Nội', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
-  { name: '', lat: 21.04768315572356, lng: 105.8374600288556, icon: iconXuatPhat },
-  { name: '', lat: 21.042377656187288, lng: 105.84257778478005, icon: iconXuatPhat },
-  { name: '', lat: 21.0406163137389, lng: 105.84203871714057, icon: iconXuatPhat },
-  { name: '', lat: 21.042745097846275, lng: 105.8329445473384, icon: iconXuatPhat },
-  { name: '', lat: 21.034805309573194, lng: 105.83926080516213, icon: iconXuatPhat },
+  { name: 'Bo Quoc Phong', lat: 21.035639552104428, lng: 105.84119256591276, icon: iconTapKet },
+  { name: 'My Dinh', lat: 21.020498371758954, lng: 105.76611054339655, icon: iconTapKet },
+  { name: 'Yen Phu', lat: 21.05065442276042, lng: 105.83994491121301, icon: iconXuatPhat },
+  { name: 'Quan Thanh', lat: 21.042791677122025, lng: 105.84015553085231, icon: iconXuatPhat },
+  { name: 'Phan Dinh Phung', lat: 21.04098432786458, lng: 105.84005647224379, icon: iconXuatPhat },
+  { name: 'Hoang Hoa Tham', lat: 21.04174771084369, lng: 105.83128881475909, icon: iconXuatPhat },
 ]
 
 
@@ -199,21 +204,21 @@ const toiletIcon = L.icon({
 //Icon event
 const eventIcon = L.icon({
   iconUrl: new URL('../assets/images/sankhau.svg', import.meta.url).href,
-  iconSize: [32, 32],
+  iconSize: [48, 48],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
 })
-
+//Icon Led monitor
 const ledIcon = L.icon({
   iconUrl: new URL('../assets/images/ledmonitor.svg', import.meta.url).href,
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
 })
-
+//Icon Phao hoa
 const phaoIcon = L.icon({
   iconUrl: new URL('../assets/images/phaohoa.svg', import.meta.url).href,
-  iconSize: [32, 32],
+  iconSize: [48, 48],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32]
 })
@@ -247,8 +252,8 @@ onMounted(() => {
   ])
 
   const mapInstance = L.map('map', {
-    maxBounds: bounds,
-    maxBoundsViscosity: 1.0,
+    //maxBounds: bounds,
+    //maxBoundsViscosity: 0.1,
     zoomControl: false,
   }).setView([21.037042159870733, 105.8358108494083], 16)
 
@@ -336,6 +341,7 @@ onMounted(() => {
 
 })
 
+//Chia bang dia diem nha ve sinh cong cong
 const descriptionTableRows = computed(() => {
   if (!selectedDescription.value) return []
   const regex = /(\d+)\.([^:]+):\s*([^,]+)(?:,|$)/g
@@ -347,6 +353,7 @@ const descriptionTableRows = computed(() => {
     address: match[3].trim()
   }))
 })
+
 
 watch(displayMode, (mode) => {
   const mapInstance = map.value
@@ -377,8 +384,8 @@ watch(displayMode, (mode) => {
 <style scoped>
 .menu-control {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 4.6rem;
+  right: 0.5rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
   padding: 12px;
@@ -394,28 +401,30 @@ watch(displayMode, (mode) => {
 }
 
 .menu-control.expanded {
-  min-height: 240px;
+  height: auto;
   min-width: 240px;
   max-width: 360px;
 }
 
 .menu-button {
-  width: 100px;
-  min-width: 100px;
+
   max-width: 100px;
-  background-color: #3498db;
   color: white;
-  border: none;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 8px;
+  background-color: #3498db;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 1rem;
+  font-weight: bold;
   text-align: center;
+  transition: background-color 0.3s;
+
 }
 
 .menu-button:hover {
   background-color: #2980b9;
+}
+
+.menu-button:hover {
+  background-color: #357abd;
 }
 
 .control-content {
@@ -448,7 +457,7 @@ select {
   overflow-wrap: break-word;
   white-space: normal;
   overflow-y: auto;
-  max-height: 500px;
+  height: auto;
   
 }
 
@@ -479,23 +488,26 @@ select {
 
 .logo {
   position: absolute;
-  top: 2.6rem;
+  top: 0.6rem;
   left: 3.6rem;
   width: 3rem;
-  transform: scale(2.4);
+  transform: scale(1);
   height: auto;
   z-index: 1001;
 }
 
 .top-nav {
-  position: absolute;
-  top: 2.6rem;
+  position: fixed;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
+  width: 100%;
+  height: 6%;
   z-index: 1000;
 
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
 
   background: rgba(255, 255, 255, 0.95);
@@ -505,32 +517,35 @@ select {
   flex-wrap: wrap;
 }
 
-.menu-button {
-  background-color: #4a90e2;
-  border: none;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
+.nav-bar {
+  flex: 1;
+  overflow: hidden;
 }
 
-.menu-button:hover {
-  background-color: #357abd;
+.mode-buttons {
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+
+.mode-buttons::-webkit-scrollbar {
+  display: none;
 }
 
 .mode-buttons button {
   background-color: #ff0000;
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 0 0.6rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
   font-weight: 400;
+  font-size: 14;
   word-spacing: 0.2rem;
   text-transform: uppercase;
+  flex-shrink: 0;
+  min-width: 6rem;
 }
 
 .mode-buttons button.active {
@@ -551,4 +566,11 @@ select {
 .fade-leave-to {
   opacity: 0;
 }
+
+@media (max-width: 600px) {
+  .mode-buttons {
+    max-width: 12rem;  /* đủ để hiện 1–2 button */
+  }
+}
+
 </style>

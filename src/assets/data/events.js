@@ -38,8 +38,8 @@ export default [
     {
         id: 6,
         name: "Tháp Rùa-Hồ Hoàn Kiếm",
-        lat: 21.027860311295886,
-        lng: 105.85226732859574,
+        lat: 21.03197685963608,
+        lng: 105.8514858984987,
         description: "Tên chương trình: Hà Nội - một dải gấm hoa ; Thời gian: 20h00' ngày 16-17/8/2025 ; Ý nghĩa chương trình: “Hồ Gươm tỏa sáng - Hà Nội dẫn lối tương lai” mang thông điệp: Từ những giá trị lịch sử và văn hóa ngàn đời, Hà Nội không chỉ gìn giữ ký ức mà còn kiến tạo tương lai. Di sản chính là nền móng – còn khát vọng sáng tạo là đôi cánh để Hà Nội bay cao cùng đất nước."
     },
     {
