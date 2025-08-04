@@ -1,7 +1,7 @@
 <template>
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
 
-        <img src="../assets/images/logoA80.png" alt="" class="logo">
+        <!-- <img src="../assets/images/logoA80.png" alt="" class="logo"> -->
 
     <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
       <!-- Navigation bar -->
@@ -9,13 +9,15 @@
         <div class="nav-bar">
           <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
           <div class="mode-buttons">
-            <button
-              style="width: 8rem; height: 2.4rem; margin: 0.3rem 0.6rem"
-              v-for = "mode in displayModes"
-              :key="mode.value"
-              :class="{active: displayMode == mode.value}"
-              @click = "displayMode = mode.value"
-            >{{ mode.label }}</button>
+            <template v-for="mode in displayModes" :key="mode.value">
+              <button
+                style="width: 8rem; height: 2.4rem; margin: 0.3rem 0.6rem"
+                :class="{ active: displayMode == mode.value }"
+                @click="displayMode = mode.value"
+              >
+                {{ mode.label }}
+              </button>
+            </template>
           </div>
         </div>
       </div>
@@ -103,11 +105,11 @@ import phaoData from '../assets/data/phaos'
 const displayModes = [
   { label: 'Sự kiện', value: 'events' },
 
-  //{ label: 'Tuyến đường', value: 'routes' },
+  { label: 'Tuyến đường', value: 'routes' },
 
   { label: 'Pháo hoa', value: 'phaos' },
 
-  // { label: 'Led', value: 'leds' },
+  { label: 'Led', value: 'leds' },
 
   { label: 'Nhà vệ sinh', value: 'toilets' },
 ]
@@ -254,6 +256,7 @@ onMounted(() => {
   const mapInstance = L.map('map', {
     //maxBounds: bounds,
     //maxBoundsViscosity: 0.1,
+    attributionControl: false, 
     zoomControl: false,
   }).setView([21.037042159870733, 105.8358108494083], 16)
 
@@ -423,10 +426,6 @@ watch(displayMode, (mode) => {
   background-color: #2980b9;
 }
 
-.menu-button:hover {
-  background-color: #357abd;
-}
-
 .control-content {
   flex: 1;
   width: 100%;
@@ -486,6 +485,16 @@ select {
   font-weight: bold;
 }
 
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .logo {
   position: absolute;
   top: 0.6rem;
@@ -499,33 +508,46 @@ select {
 .top-nav {
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100%;
   height: 6%;
   z-index: 1000;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-
+  
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   padding: 6px 12px;
+  
+  /* display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px; */
+
+  overflow-x: auto;
+
 }
 
 .nav-bar {
-  flex: 1;
-  overflow: hidden;
+  /* width: max-content; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
+
 .mode-buttons {
+  display: flex;
+  gap: 12px;
   overflow-x: auto;
   white-space: nowrap;
+  justify-content: center;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px;
+  min-width: max-content;
 }
 
 .mode-buttons::-webkit-scrollbar {
@@ -541,10 +563,11 @@ select {
   cursor: pointer;
   transition: background-color 0.3s;
   font-weight: 400;
-  font-size: 14;
+  font-size: 14px;
   word-spacing: 0.2rem;
   text-transform: uppercase;
   flex-shrink: 0;
+  white-space: nowrap;
   min-width: 6rem;
 }
 
@@ -557,19 +580,23 @@ select {
   background-color: #b48383;
 }
 
+.leaflet-control-attribution {
+  display: none !important;
+}
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 
 @media (max-width: 600px) {
   .mode-buttons {
-    max-width: 12rem;  /* đủ để hiện 1–2 button */
+    
+    flex-shrink: 0;
+
+  }
+  .top-nav{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mode-buttons {
+    flex-wrap: nowrap;
   }
 }
 
