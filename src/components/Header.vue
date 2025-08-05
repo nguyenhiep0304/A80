@@ -92,7 +92,7 @@ function selectMode(value) {
     justify-content: center;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    padding: 4px;
+    padding: 6px;
     min-width: max-content;
 }
 
@@ -136,16 +136,21 @@ function selectMode(value) {
         width: 100%;
     }
     .nav-logo {
-        width: 30%;
+        width: 15%;
+    }
+    .logo{
+        position: absolute;
+        left: 1.6rem;
     }
     .nav-bar {
-        width: 40%;
-        margin-left: 0%;
+        width: 50%;
+        margin-left: 10%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     .mode-buttons {
         width: 100%;
+        margin-left: 164%;
     } 
 }
 </style>
