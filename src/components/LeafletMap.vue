@@ -1,46 +1,18 @@
 <template>
 
-<Header
+  <Header
     :displayModes="displayModes"
     :displayMode="displayMode"
     @update:displayMode="(val) => displayMode = val"
   />
 
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
-    <!-- <img src="../assets/images/logoA80.png" alt="" class="logo"> -->
-    <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
-      <!-- Navigation bar -->
-      <!-- <div class="top-nav">
-        <div class="nav-bar">
-          <div class="mode-buttons">
-            <template v-for="mode in displayModes" :key="mode.value">
-              <button
-                style="width: 8rem; height: 2.4rem; margin: 0.3rem 0.6rem"
-                :class="{ active: displayMode == mode.value }"
-                @click="displayMode = mode.value"
-              >
-                {{ mode.label }}
-              </button>
-            </template>
-          </div>
-        </div>
-      </div> -->
-
     <div :class="['menu-control', { expanded: showControlBar }]">
       
       <!-- Nôi dung thông tin -->
       <transition name="fade">
         <div v-if="showControlBar" class="control-content">
-          <!-- <label for="displayMode">Chế độ hiển thị:</label>
-          <select id="displayMode" v-model="displayMode">
-            <option value="none">Không hiển thị</option>
-            <option value="toilets">Nhà vệ sinh</option>
-            <option value="routes">Tuyến đường</option>
-            <option value="events">Sự kiện</option>
-            <option value="leds">Màn hình Led</option>
-            <option value="phaos">Pháo hoa</option>
-          </select> -->
-
+          
           <!-- Thông tin hiển thị -->
           <div class="info-box">
             <p v-if="displayMode === 'none'">Chưa chọn chế độ hiển thị.</p>
@@ -104,7 +76,6 @@ import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
 import phaoData from '../assets/data/phaos'
-// import { events as rawEvents } from "../assets/data/events"
 
 
 const displayModes = [
@@ -121,7 +92,7 @@ const displayModes = [
 
 
 const map = ref(null)
-const displayMode = ref('routes')
+const displayMode = ref('')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
@@ -230,9 +201,16 @@ const phaoIcon = L.icon({
   popupAnchor: [0, -32]
 })
 
-// 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
-//let controlContentEl = null
+// Vung bao Ba Dinh
+const baDinhArea = [
+  [21.038847491898615, 105.83708248153141],
+  [21.03544523706299, 105.83635061394801],
+  [21.035911702634333, 105.83408056705824],
+  [21.039171322058184, 105.8350981719592]
+]
 
+
+// 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
 function stopWheelPropagation(event) {
   event.stopPropagation()
   event.preventDefault()
@@ -339,6 +317,7 @@ onMounted(() => {
     })
     routeLayer.value.addLayer(polyline)
   })
+
   importantPoints.forEach((point) => {
     const marker = L.marker([point.lat, point.lng], {
       icon: point.icon,
@@ -499,102 +478,4 @@ select {
 .fade-leave-to {
   opacity: 0;
 }
-
-/* .logo {
-  position: absolute;
-  top: 0.6rem;
-  left: 3.6rem;
-  width: 3rem;
-  transform: scale(1);
-  height: auto;
-  z-index: 1001;
-}
-
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 6%;
-  z-index: 1000;
-
-  
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-
-  overflow-x: auto;
-
-}
-
-.nav-bar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-
-.mode-buttons {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  white-space: nowrap;
-  justify-content: center;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding: 4px;
-  min-width: max-content;
-}
-
-.mode-buttons::-webkit-scrollbar {
-  display: none;
-}
-
-.mode-buttons button {
-  background-color: #ff0000;
-  color: white;
-  border: none;
-  padding: 0 0.6rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-weight: 400;
-  font-size: 14px;
-  word-spacing: 0.2rem;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  white-space: nowrap;
-  min-width: 6rem;
-}
-
-.mode-buttons button.active {
-  background-color: #af634c;
-  color: white;
-}
-
-.mode-buttons button:hover {
-  background-color: #b48383;
-}
-
-.leaflet-control-attribution {
-  display: none !important;
-}
-
-
-@media (max-width: 600px) {
-  .mode-buttons {
-    
-    flex-shrink: 0;
-
-  }
-  .top-nav{
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .mode-buttons {
-    flex-wrap: nowrap;
-  }
-} */
-
 </style>

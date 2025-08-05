@@ -79,6 +79,8 @@ function selectMode(value) {
     width: 70%;
     overflow-x: auto;  
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: center;
 }
 
 
