@@ -48,7 +48,6 @@ function selectMode(value) {
     padding: 6px 12px;
 
     display: flex;
-    flex: 1;
     
     /* display: flex;
     flex-wrap: wrap;
@@ -69,7 +68,7 @@ function selectMode(value) {
 .logo {
     position: absolute;
     top: 0.6rem;
-    left: 3.6rem;
+    left: 1rem;
     width: 3rem;
     height: auto;
     z-index: 1001;
@@ -79,8 +78,8 @@ function selectMode(value) {
     width: 70%;
     overflow-x: auto;  
     -webkit-overflow-scrolling: touch;
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
 }
 
 
@@ -130,62 +129,72 @@ function selectMode(value) {
     display: none !important;
 }
 
-@media screen and (min-width: 360px) and (max-width: 600px) {
+@media screen and (min-width: 319px) and (max-width: 345px) {
     .nav-logo {
         width: 15%;
+        margin-right: 10%;
     }
     .logo{
         position: absolute;
-        left: 1.6rem;
+        left: 1rem;
     }
     .nav-bar {
         width: 50%;
-        margin-left: 10%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .mode-buttons {
+        margin-left: 2%;
+    }
+}
+
+@media screen and (min-width: 359px) and (max-width: 380px) {
+    .nav-logo {
+        width: 15%;
+        margin-right: 10%;
+    }
+    .logo{
+        position: absolute;
+        left: 1rem;
+    }
+    .nav-bar {
+        width: 60%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     .mode-buttons {
         width: 50%;
-        margin-left: 190%;
+        margin-left: 5%;
     } 
 }
 
-
-@media (max-width: 375px) {
+@media screen and (min-width: 381px) and (max-width: 600px) {
+    .nav-logo {
+        width: 15%;
+        margin-right: 10%;
+    }
     .logo{
         position: absolute;
-        left: 0.6rem;
+        left: 1rem;
     }
     .nav-bar {
-        width: 50%;
-        margin-left: 10%;
+        width: 55%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     .mode-buttons {
-        margin-left: 240%;
-    }
-}
-
-@media (max-width: 320px) {
-    .logo{
-        position: absolute;
-        left: 0.6rem;
-    }
-    .nav-bar {
         width: 50%;
-        margin-left: 10%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .mode-buttons {
-        margin-left: 240%;
-    }
+        margin-left: 2%;
+    } 
 }
 
 @media screen and (min-width: 700px) {
+    .nav-logo {
+        width: 8%;
+        margin-right: 10%;
+    }
     .mode-buttons {
-        margin-left: 10%;
+        margin-left: 2%;
     }
 }
 </style>

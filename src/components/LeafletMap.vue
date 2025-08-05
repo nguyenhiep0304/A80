@@ -71,6 +71,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import Header from '../components/Header.vue'
 
+
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
@@ -81,13 +82,15 @@ import phaoData from '../assets/data/phaos'
 const displayModes = [
   { label: 'Sự kiện', value: 'events' },
 
-  { label: 'Tuyến đường', value: 'routes' },
+  //{ label: 'Tuyến đường', value: 'routes' },
 
   { label: 'Pháo hoa', value: 'phaos' },
 
-  { label: 'Led', value: 'leds' },
+  //{ label: 'Led', value: 'leds' },
 
   { label: 'Nhà vệ sinh', value: 'toilets' },
+
+  {label: 'Trạm Y tê', value: 'ytes'}
 ]
 
 
