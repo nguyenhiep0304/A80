@@ -130,11 +130,7 @@ function selectMode(value) {
     display: none !important;
 }
 
-
-@media (max-width: 600px) {
-    .top-nav{
-        width: 100%;
-    }
+@media screen and (min-width: 360px) and (max-width: 600px) {
     .nav-logo {
         width: 15%;
     }
@@ -149,8 +145,31 @@ function selectMode(value) {
         -webkit-overflow-scrolling: touch;
     }
     .mode-buttons {
-        width: 100%;
-        margin-left: 164%;
+        width: 50%;
+        margin-left: 190%;
     } 
+}
+
+
+@media (max-width: 350px) {
+    .logo{
+        position: absolute;
+        left: 0.6rem;
+    }
+    .nav-bar {
+        width: 50%;
+        margin-left: 10%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .mode-buttons {
+        margin-left: 240%;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .mode-buttons {
+        margin-left: 10%;
+    }
 }
 </style>
