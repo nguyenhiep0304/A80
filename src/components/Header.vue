@@ -167,6 +167,22 @@ function selectMode(value) {
     }
 }
 
+@media (max-width: 320px) {
+    .logo{
+        position: absolute;
+        left: 0.6rem;
+    }
+    .nav-bar {
+        width: 50%;
+        margin-left: 10%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .mode-buttons {
+        margin-left: 240%;
+    }
+}
+
 @media screen and (min-width: 700px) {
     .mode-buttons {
         margin-left: 10%;
