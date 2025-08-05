@@ -1,13 +1,17 @@
 <template>
+
+<Header
+    :displayModes="displayModes"
+    :displayMode="displayMode"
+    @update:displayMode="(val) => displayMode = val"
+  />
+
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
-
-        <!-- <img src="../assets/images/logoA80.png" alt="" class="logo"> -->
-
+    <!-- <img src="../assets/images/logoA80.png" alt="" class="logo"> -->
     <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
       <!-- Navigation bar -->
-      <div class="top-nav">
+      <!-- <div class="top-nav">
         <div class="nav-bar">
-          <!-- <button class="menu-button" @click.stop="toggleControlBar">☰ Menu</button> -->
           <div class="mode-buttons">
             <template v-for="mode in displayModes" :key="mode.value">
               <button
@@ -20,7 +24,7 @@
             </template>
           </div>
         </div>
-      </div>
+      </div> -->
 
     <div :class="['menu-control', { expanded: showControlBar }]">
       
@@ -93,6 +97,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import Header from '../components/Header.vue'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
@@ -116,7 +121,7 @@ const displayModes = [
 
 
 const map = ref(null)
-const displayMode = ref('none')
+const displayMode = ref('routes')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
@@ -495,7 +500,7 @@ select {
   opacity: 0;
 }
 
-.logo {
+/* .logo {
   position: absolute;
   top: 0.6rem;
   left: 3.6rem;
@@ -516,20 +521,12 @@ select {
   
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  padding: 6px 12px;
-  
-  /* display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 16px; */
 
   overflow-x: auto;
 
 }
 
 .nav-bar {
-  /* width: max-content; */
   position: absolute;
   top: 0;
   bottom: 0;
@@ -598,6 +595,6 @@ select {
   .mode-buttons {
     flex-wrap: nowrap;
   }
-}
+} */
 
 </style>
