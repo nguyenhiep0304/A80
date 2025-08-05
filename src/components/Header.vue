@@ -151,7 +151,7 @@ function selectMode(value) {
 }
 
 
-@media (max-width: 350px) {
+@media (max-width: 375px) {
     .logo{
         position: absolute;
         left: 0.6rem;
