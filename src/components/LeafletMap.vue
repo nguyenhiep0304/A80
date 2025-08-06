@@ -63,6 +63,7 @@
       </transition>
     </div>
   </div>
+
 </template>
 
 <script setup>
@@ -70,7 +71,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import Header from '../components/Header.vue'
-
+import 'leaflet-rotatedmarker'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
@@ -117,7 +118,7 @@ const iconQuanNgua = L.icon({
 const iconLangBac = L.icon({
   iconUrl: new URL('../assets/images/langbac.svg', import.meta.url).href,
   iconSize: [32, 32],
-  iconAnchor: [16, 32],
+  iconAnchor: [16, 16],
   popupAnchor: [0, -32]
 })
 
@@ -149,9 +150,16 @@ const iconXuatPhat = L.icon({
   popupAnchor: [0, -32]
 })
 
+const iconKhanDai = L.icon({
+  iconUrl: new URL('../assets/images/khandai.svg', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+  popupAnchor: [0, -32]
+})
+
 const importantPoints = [
   { name: 'Cung thể thao Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
-  { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
+  { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.03695097823098, lng: 105.83467757910672, icon: iconLangBac },
   { name: 'Nhà hát Lớn Hà Nội', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
   { name: 'Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
@@ -204,15 +212,6 @@ const phaoIcon = L.icon({
   popupAnchor: [0, -32]
 })
 
-// Vung bao Ba Dinh
-const baDinhArea = [
-  [21.038847491898615, 105.83708248153141],
-  [21.03544523706299, 105.83635061394801],
-  [21.035911702634333, 105.83408056705824],
-  [21.039171322058184, 105.8350981719592]
-]
-
-
 // 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
 function stopWheelPropagation(event) {
   event.stopPropagation()
@@ -258,6 +257,23 @@ onMounted(() => {
       mapInstance.panInsideBounds(bounds, { animate: true })
     }
   })
+
+  // Vung bao Ba Dinh
+  const baDinhArea = L.polygon([
+    [21.038847491898615, 105.83708248153141],
+    [21.03544523706299, 105.83635061394801],
+    [21.035911702634333, 105.83408056705824],
+    [21.039171322058184, 105.8350981719592]
+  ], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0,
+  }).addTo(mapInstance)
+
+  L.marker([21.037127409547015, 105.83467594057245], { icon: iconLangBac }).addTo(mapInstance)
+  L.marker([21.036174272004658, 105.83469100735387], { icon: iconKhanDai, rotationAngle: 100, rotationOrigin: 'center' }).addTo(mapInstance)
+  L.marker([21.037276045230037, 105.83492293194801], { icon: iconKhanDai, rotationAngle: 100, rotationOrigin: 'center' }).addTo(mapInstance)
+
   //Add Toilets
   toiletLayer.value = L.layerGroup(
     toiletData.map((item) => {
