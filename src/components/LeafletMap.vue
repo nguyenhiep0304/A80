@@ -51,13 +51,20 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
-
+            
             <p v-else-if="displayMode === 'toilets'">Đang hiển thị nhà vệ sinh công cộng.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
             <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
+
+            <div v-else-if="selectedName">
+              <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <p style="margin: 4px 0 0;">{{ selectedDescription }}</p>
+            </div>
           </div>
+
+
           
         </div>
       </transition>
@@ -83,11 +90,11 @@ import phaoData from '../assets/data/phaos'
 const displayModes = [
   { label: 'Sự kiện', value: 'events' },
 
-  //{ label: 'Tuyến đường', value: 'routes' },
+  { label: 'Tuyến đường', value: 'routes' },
 
   { label: 'Pháo hoa', value: 'phaos' },
 
-  //{ label: 'Led', value: 'leds' },
+  { label: 'Led', value: 'leds' },
 
   { label: 'Nhà vệ sinh', value: 'toilets' },
 
@@ -150,27 +157,20 @@ const iconXuatPhat = L.icon({
   popupAnchor: [0, -32]
 })
 
-const iconKhanDai = L.icon({
-  iconUrl: new URL('../assets/images/khandai.svg', import.meta.url).href,
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-  popupAnchor: [0, -32]
-})
-
 const importantPoints = [
   { name: 'Cung thể thao Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
-  { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.03695097823098, lng: 105.83467757910672, icon: iconLangBac },
+  { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
   { name: 'Nhà hát Lớn Hà Nội', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
-  { name: 'Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
-  { name: 'Công viên Thống Nhất', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
-  { name: 'Nhà hát Lớn Hà Nội', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
-  { name: 'Bo Quoc Phong', lat: 21.035639552104428, lng: 105.84119256591276, icon: iconTapKet },
-  { name: 'My Dinh', lat: 21.020498371758954, lng: 105.76611054339655, icon: iconTapKet },
-  { name: 'Yen Phu', lat: 21.05065442276042, lng: 105.83994491121301, icon: iconXuatPhat },
-  { name: 'Quan Thanh', lat: 21.042791677122025, lng: 105.84015553085231, icon: iconXuatPhat },
-  { name: 'Phan Dinh Phung', lat: 21.04098432786458, lng: 105.84005647224379, icon: iconXuatPhat },
-  { name: 'Hoang Hoa Tham', lat: 21.04174771084369, lng: 105.83128881475909, icon: iconXuatPhat },
+  { name: 'Điểm tập kết Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
+  { name: 'Điểm tập kết Công viên Thống Nhất', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
+  { name: 'Điểm tập kết Nhà hát Lớn Hà Nội', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
+  { name: 'Điểm tập kết Bộ Quốc Phòng', lat: 21.035639552104428, lng: 105.84119256591276, icon: iconTapKet },
+  { name: 'Điểm tập kết Mỹ Đình', lat: 21.020498371758954, lng: 105.76611054339655, icon: iconTapKet },
+  { name: 'Điểm xuất phát Yên Phụ', lat: 21.05065442276042, lng: 105.83994491121301, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Quán Thánh', lat: 21.042791677122025, lng: 105.84015553085231, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Quán Thánh Phan Đình Phùng', lat: 21.04098432786458, lng: 105.84005647224379, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Hoàng Hoa Thám', lat: 21.04174771084369, lng: 105.83128881475909, icon: iconXuatPhat },
 ]
 
 
@@ -267,13 +267,18 @@ onMounted(() => {
   ], {
     color: 'red',
     fillColor: '#f03',
-    fillOpacity: 0,
+    fillOpacity: 0.2,
   }).addTo(mapInstance)
 
-  L.marker([21.037127409547015, 105.83467594057245], { icon: iconLangBac }).addTo(mapInstance)
-  L.marker([21.036174272004658, 105.83469100735387], { icon: iconKhanDai, rotationAngle: 100, rotationOrigin: 'center' }).addTo(mapInstance)
-  L.marker([21.037276045230037, 105.83492293194801], { icon: iconKhanDai, rotationAngle: 100, rotationOrigin: 'center' }).addTo(mapInstance)
+  baDinhArea.on('click', () => {
+    selectedName.value = 'Khu vực quảng trường Ba Đình'
+    showControlBar.value = true
+  })
 
+  L.marker([21.037127409547015, 105.83467594057245], { icon: iconLangBac }).addTo(mapInstance).on('click', () => {
+    selectedName.value = 'Lăng chủ tịch Hồ Chí Minh'
+    showControlBar.value = true
+  })
   //Add Toilets
   toiletLayer.value = L.layerGroup(
     toiletData.map((item) => {
@@ -292,7 +297,11 @@ onMounted(() => {
       const marker = L.marker([item.lat, item.lng], { icon: eventIcon })
       marker.on('click', () => {
         selectedName.value = item.name
-        selectedDescription.value = item.description.replace(/; \s*/g, '<br>')
+        selectedDescription.value = item.description
+        .replace(/Tên chương trình:/, '<strong>Tên chương trình:</strong>')
+        .replace(/Thời gian:/, '<strong>Thời gian:</strong>')
+        .replace(/Ý nghĩa chương trình:/, '<strong>Ý nghĩa chương trình:</strong>')
+        .replace(/; \s*/g, '<br>')
         showControlBar.value = true
       })
       return marker
@@ -341,7 +350,14 @@ onMounted(() => {
     const marker = L.marker([point.lat, point.lng], {
       icon: point.icon,
       title: point.name,
-    }).bindPopup(`<strong>${point.name}</strong>`)
+    })
+
+    marker.on('click', () => {
+      selectedName.value = point.name,
+        selectedDescription.value = point.description || ''
+      showControlBar.value = true
+    })
+
     routeLayer.value.addLayer(marker)
   })
 
