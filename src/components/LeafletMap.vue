@@ -10,11 +10,11 @@
     <div :class="['menu-control', { expanded: showControlBar }]">
       
       <!-- Nôi dung thông tin -->
-      <transition name="fade">
-        <div v-if="showControlBar" class="control-content">
+      <!-- <transition name="fade">
+        <div v-if="showControlBar" class="control-content"> -->
           
           <!-- Thông tin hiển thị -->
-          <div class="info-box">
+          <!-- <div class="info-box">
             <p v-if="displayMode === 'none'">Chưa chọn chế độ hiển thị.</p>
 
             <div v-else-if="displayMode === 'toilets' && selectedName">
@@ -89,8 +89,20 @@
 
           
         </div>
+      </transition> -->
+
+      <transition name="fade">
+        <div v-if="showControlBar" class="control-content">
+          <InfoBox
+            :displayMode="displayMode"
+            :selectedName="selectedName"
+            :selectedDescription="selectedDescription"
+            :toiletDescriptionTableRows="toiletDescriptionTableRows"
+            :yteDescriptionTableRows="yteDescriptionTableRows"
+          />
+        </div>
       </transition>
-      
+
     </div>
   </div>
 
@@ -102,6 +114,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-rotatedmarker'
 import Header from '../components/Header.vue'
+import InfoBox from './InfoBox.vue'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'

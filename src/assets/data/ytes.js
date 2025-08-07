@@ -32,55 +32,62 @@ export default [
         name: "Đường Hoàng Hoa Thám",
         lat: 21.041230433139532,
         lng: 105.83039725790886,
-        description: "1.Công Viên Bách Thảo: 1 Đ. Hoàng Hoa Thám, 2.Trường THCS Ba Đình: 145 Đ. Hoàng Hoa Thám, 3.PKĐK quận Tây Hồ: 124 Đ. Hoàng Hoa Thám"        
+        description: "1.Công Viên Bách Thảo: 1 Hoàng Hoa Thám, 2.Trường THCS Ba Đình: 145 Hoàng Hoa Thám, 3.PKĐK quận Tây Hồ: 124 Hoàng Hoa Thám"        
     },
     {
         id: 6,
         name: "Phố Quán Thánh",
         lat: 21.042923579279044,
         lng: 105.8382443747033,
-        description: "1.Vườn hoa Hàng Đậu: , 2.Trường Tiểu học Nguyễn Tri Phương: 190 P. Quán Thánh"
+        description: "1.Trường Tiểu học Nguyễn Tri Phương: 190 Quán Thánh"
     },
     {
         id: 7,
         name: "Đường Phan Đình Phùng",
         lat: 21.041399636106817,
         lng: 105.84052109000875,
-        description: "1.Nhà thờ Cửa Bắc: 56 P. Phan Đình Phùng, 2.Trường THPT Phan Đình Phùng: 30 P. Phan Đình Phùng"
+        description: "1.Nhà thờ Cửa Bắc: 56  Phan Đình Phùng, 2.Trường THPT Phan Đình Phùng: 30  Phan Đình Phùng"
     },
     {
         id: 8,
         name: "Phố Nguyễn Thái Học",
         lat: 21.030677715458626,
         lng: 105.83545545366874,
-        description: "1. Bệnh Viện Xanh Pôn: 72A Nguyễn Thái Học, 2.Trường Tiểu học Phan Chu Chinh: 40 P. Nguyễn Thái Học, 3. Trường Mần Non 1/6: , 4. Trạm Y Tế Điện Biên: 142 P. Nguyễn Thái Học"
+        description: "1. Bệnh Viện Xanh Pôn: 72A Nguyễn Thái Học, 2.Trường Tiểu học Phan Chu Chinh: 40  Nguyễn Thái Học, 3. Trường Mần Non 1/6: , 4. Trạm Y Tế Điện Biên: 142  Nguyễn Thái Học"
     },
     {
         id: 9,
         name: "Phố Kim Mã",
         lat: 21.031967407238845,
         lng: 105.82359418225204,
-        description: "1.UBND Phường Kim Mã: 6 P. Kim Mã, 2.Nhà hát Chèo Việt Nam: 1 P. Giang Văn Minh, 3.Tòa Vinhome Metropolis: 304 P. Kim Mã"
+        description: "1.UBND Phường Kim Mã: 6  Kim Mã, 2.Nhà hát Chèo Việt Nam: 1  Giang Văn Minh, 3.Tòa Vinhome Metropolis: 304  Kim Mã"
     },
     {
         id: 10,
         name: "Phố Liễu Giai",
         lat: 21.034439266086782,
         lng: 105.8145828180753,
-        description: "1.UBND Quận Ba Đình: 25 P. Liễu Giai, 2.Trường Liên Cấp Thực Nghiệm: 50-52 P. Liễu Giai, 3.Trường Tiểu học Nguyễn Bá Học: 46 P. Liễu Giai"
+        description: "1.UBND Quận Ba Đình: 25 Liễu Giai, 2.Trường Liên Cấp Thực Nghiệm: 50-52 Liễu Giai, 3.Trường Tiểu học Nguyễn Bá Học: 46 Liễu Giai"
     },
     {
         id: 11,
         name: "Đường Văn Cao",
         lat: 21.040072795708724,
         lng: 105.81563848544825,
-        description: "1.Cung thể thao Quần Ngựa: 30 Đ. Văn Cao, 2. Trạm Y Tế Liễu Giai: 26 P. Quần Ngựa, 3. Trung tâm y tế Môi trường: 99 Đ. Văn Cao"
+        description: "1.Cung thể thao Quần Ngựa: 30 Văn Cao, 2. Trạm Y Tế Liễu Giai: 26 Quần Ngựa, 3. Trung tâm y tế Môi trường: 99 Văn Cao"
     },
     {
         id: 12,
         name: "Lê Duẩn",
         lat: 21.01837378365375,
         lng: 105.84160982281026,
-        description: "1.Bệnh viện đa khoa Hồng Phát: 219 Đ. Lê Duẩn, 2.Công viên Thống Nhất: 354A Đ. Lê Duẩn"
+        description: "1.Bệnh viện đa khoa Hồng Phát: 219 Lê Duẩn, 2.Công viên Thống Nhất: 354A Lê Duẩn"
+    },
+    {
+        id: 13,
+        name: "Hàng Đậu",
+        lat: 21.040162304097866,
+        lng: 105.84571975598715,
+        description: "1.Vườn hoa Hàng Đậu: 2 Phan Đình Phùng"
     }
 ];

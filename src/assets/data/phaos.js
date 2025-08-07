@@ -16,8 +16,8 @@ export default [
     {
         id: 3,
         name: "Công viên Thống Nhất",
-        lat: 21.01445309629053,
-        lng: 105.84397513831198,
+        lat: 21.011217413490566,
+        lng: 105.84253248864852,
         description: "Thời gian: từ 30/8/2025 đến 2/9/2025"
     },
     {
