@@ -10,11 +10,11 @@
     <div :class="['menu-control', { expanded: showControlBar }]">
       
       <!-- Nôi dung thông tin -->
-      <!-- <transition name="fade">
-        <div v-if="showControlBar" class="control-content"> -->
+      <transition name="fade">
+        <div v-if="showControlBar" class="control-content">
           
           <!-- Thông tin hiển thị -->
-          <!-- <div class="info-box">
+          <div class="info-box">
             <p v-if="displayMode === 'none'">Chưa chọn chế độ hiển thị.</p>
 
             <div v-else-if="displayMode === 'toilets' && selectedName">
@@ -89,18 +89,6 @@
 
           
         </div>
-      </transition> -->
-
-      <transition name="fade">
-        <div v-if="showControlBar" class="control-content">
-          <InfoBox
-            :displayMode="displayMode"
-            :selectedName="selectedName"
-            :selectedDescription="selectedDescription"
-            :toiletDescriptionTableRows="toiletDescriptionTableRows"
-            :yteDescriptionTableRows="yteDescriptionTableRows"
-          />
-        </div>
       </transition>
 
     </div>
@@ -114,7 +102,6 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-rotatedmarker'
 import Header from '../components/Header.vue'
-import InfoBox from './InfoBox.vue'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
@@ -262,18 +249,17 @@ function stopWheelPropagation(event) {
 }
 
 onMounted(() => {
-  const controlContentEl = document.querySelector('.control-content')
-  if (controlContentEl) {
-    controlContentEl.addEventListener('wheel', (event) => {
-      event.preventDefault()
-      event.stopPropagation()
-    }, { passive: false })
+  const infoBox = document.querySelector('.info-box')
+  if (infoBox) {
+      // Ngăn sự kiện cuộn từ phần tử này truyền lên bản đồ
+      L.DomEvent.disableScrollPropagation(infoBox)
   }
-  const el = document.querySelector('control-content')
-  if (el) {
-    L.DomEvent.disableScrollPropagation(el)
-    L.DomEvent.disableClickPropagation(el)
+
+  const menuControl = document.querySelector('.menu-control')
+  if (menuControl) {
+      L.DomEvent.disableScrollPropagation(menuControl)
   }
+    
 
   // Thiết lập bản đồ
   const bounds = L.latLngBounds([
@@ -317,6 +303,7 @@ onMounted(() => {
 
   baDinhArea.on('click', () => {
     selectedName.value = 'Khu vực quảng trường Ba Đình'
+    selectedDescription.value= ''
     showControlBar.value = true
   })
 

@@ -133,7 +133,7 @@ export default [
 
     ],
     color: "#ff0000ff",
-    description: "Tuyen duong rut ve my dinh"
+    description: ""
   },
   {
     id: 9,
