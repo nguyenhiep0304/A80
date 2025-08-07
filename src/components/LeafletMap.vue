@@ -251,8 +251,8 @@ const phaoIcon = L.icon({
 //Icon Y te
 const yteIcon = L.icon({
   iconUrl: new URL('../assets/images/benhvien.svg', import.meta.url).href,
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
+  iconSize: [24, 24],
+  iconAnchor: [16, 16],
   popupAnchor: [0, -32]
 })
 // 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
@@ -277,15 +277,17 @@ onMounted(() => {
 
   // Thiết lập bản đồ
   const bounds = L.latLngBounds([
-    [20.995, 105.78],
-    [21.08, 105.91],
+    [20.8, 105.7],
+    [21.2, 106.0],
   ])
 
   const mapInstance = L.map('map', {
-    //maxBounds: bounds,
-    //maxBoundsViscosity: 0.1,
+    // maxBounds: bounds,
+    // maxBoundsViscosity: 0.0, // Cản không cho ra ngoài, nhưng không bật lại
     attributionControl: false, 
     zoomControl: false,
+    maxZoom: 17,
+    minZoom: 12,
   }).setView([21.037042159870733, 105.8358108494083], 16)
 
   map.value = mapInstance
@@ -446,8 +448,11 @@ watch(displayMode, (mode) => {
   const mapInstance = map.value
   selectedName.value = ''
   selectedDescription.value = ''
-  if (!mapInstance) return
 
+  if (!mapInstance) return
+  
+  mapInstance.setView([21.037042159870733, 105.8358108494083], 16)
+  
   ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
