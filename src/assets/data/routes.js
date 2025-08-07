@@ -53,7 +53,7 @@ export default [
       [21.036913547204897, 105.83516666439544],
       [21.03406027549262, 105.83459442617273]
     ],
-    color: "#2287E0",
+    color: "#00d812ff",
     description: "Tuyến đường từ Thanh Niên đến Lăng Bác"
   },
   {
@@ -132,7 +132,7 @@ export default [
       [21.035639552104428, 105.84119256591276]//Diem ket thuc
 
     ],
-    color: "#ff882d",
+    color: "#ff0000ff",
     description: "Tuyen duong rut ve my dinh"
   },
   {
@@ -143,7 +143,7 @@ export default [
       [21.030832156595192, 105.8403657972631],
       [21.035639552104428, 105.84119256591276]
     ],
-    color: "#ff882d",
+    color: "#ff0000ff",
     description: ""
   }
 

@@ -1,7 +1,10 @@
 <template>
 <!-- File: HomePage.vue -->
     <div id="map">
-        <!-- <img src="../assets/images/bandoUIBG.jpg" alt="Logo" /> -->
+        <div class="guide-container">
+            <img src="../assets/images/bandoUIguide.png" alt="guide"/>
+        </div>
+
         <div class="min-h-screen flex flex-col items justify-center bg-cover bg-center bg-no-repeat bg-fixed">
             <button @click="goToMap" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded font-semibold main-button">BẮT ĐẦU KHÁM PHÁ</button>
         </div>
@@ -18,19 +21,6 @@ const router = useRouter();
 </script>
 
 <style scoped>
-    .main-button{
-        position: absolute;
-        bottom: 5rem;
-        transform: translate(-50%, 50%);
-        font-size: 1.2rem;
-        color:white;
-        background-color: red;
-    }
-
-    img {
-        width: 100%;
-        height: 100%;
-    }
 
     #map{
         height: 100vh;
@@ -39,6 +29,45 @@ const router = useRouter();
         background-size: cover;    /* Bao phủ toàn bộ */
         background-position: center center; /* Canh giữa */
         background-repeat: no-repeat;
+    }
+
+    .guide-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .guide-container img {
+        position: absolute;
+        bottom: 3rem;
+        object-fit: contain;
+        transform: scale(60%);
+    }
+
+    .main-button{
+        position: absolute;
+        bottom: 5rem;
+        transform: translate(-50%, 50%);
+        font-size: 1.2rem;
+        color:white;
+        background-color: red;
+        white-space: nowrap;
+    }
+
+    @media screen and (max-width: 380px) {
+        .guide-container img {
+            bottom: -1rem;
+            transform: scale(50%) !important;
+        }
+        .main-button {
+            bottom: 3rem;
+        }
+    }
+    @media screen and (min-width: 700px) {
+        .guide-container img {
+            transform: scale(65%);
+            bottom: 3rem;
+        }
     }
 </style>
 

@@ -16,9 +16,10 @@
           <!-- Thông tin hiển thị -->
           <div class="info-box">
             <p v-if="displayMode === 'none'">Chưa chọn chế độ hiển thị.</p>
+
             <div v-else-if="displayMode === 'toilets' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
-              <table v-if="descriptionTableRows.length" class="description-table">
+              <table v-if="toiletDescriptionTableRows.length" class="description-table">
                 <thead>
                   <tr>
                     <th>STT</th>
@@ -27,7 +28,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(row, index) in descriptionTableRows" :key="index">
+                  <tr v-for="(row, index) in toiletDescriptionTableRows" :key="index">
                     <td>{{ row.number }}</td>
                     <td>{{ row.name }}</td>
                     <td>{{ row.address }}</td>
@@ -51,12 +52,33 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            <div v-else-if="displayMode === 'ytes' && selectedName">
+              <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <table v-if="yteDescriptionTableRows.length" class="description-table">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Tên</th>
+                    <th>Địa chỉ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(row, index) in yteDescriptionTableRows" :key="index">
+                    <td>{{ row.number }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.address }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
             
             <p v-else-if="displayMode === 'toilets'">Đang hiển thị nhà vệ sinh công cộng.</p>
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
             <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
+            <p v-else-if="displayMode === 'ytes'">Đang hiển thị địa điểm hỗ trợ y tế.</p>
 
             <div v-else-if="selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
@@ -68,6 +90,7 @@
           
         </div>
       </transition>
+      
     </div>
   </div>
 
@@ -77,14 +100,15 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import Header from '../components/Header.vue'
 import 'leaflet-rotatedmarker'
+import Header from '../components/Header.vue'
 
 import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
 import phaoData from '../assets/data/phaos'
+import yteData from '../assets/data/ytes'
 
 
 const displayModes = [
@@ -94,11 +118,11 @@ const displayModes = [
 
   { label: 'Pháo hoa', value: 'phaos' },
 
-  { label: 'Led', value: 'leds' },
+  { label: 'Màn hình Led', value: 'leds' },
 
   { label: 'Nhà vệ sinh', value: 'toilets' },
 
-  {label: 'Trạm Y tê', value: 'ytes'}
+  {label: 'Điểm y tế', value: 'ytes'}
 ]
 
 
@@ -107,12 +131,12 @@ const displayMode = ref('')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
-// const showEvents = ref(false)
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
 const ledLayer = ref(null)
 const phaoLayer = ref(null)
+const yteLayer = ref(null)
 const routeLayer = ref(L.layerGroup())
 
 const iconQuanNgua = L.icon({
@@ -211,7 +235,13 @@ const phaoIcon = L.icon({
   iconAnchor: [16, 32],
   popupAnchor: [0, -32]
 })
-
+//Icon Y te
+const yteIcon = L.icon({
+  iconUrl: new URL('../assets/images/benhvien.svg', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+})
 // 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
 function stopWheelPropagation(event) {
   event.stopPropagation()
@@ -275,10 +305,8 @@ onMounted(() => {
     showControlBar.value = true
   })
 
-  L.marker([21.037127409547015, 105.83467594057245], { icon: iconLangBac }).addTo(mapInstance).on('click', () => {
-    selectedName.value = 'Lăng chủ tịch Hồ Chí Minh'
-    showControlBar.value = true
-  })
+  L.marker([21.037127409547015, 105.83467594057245], { icon: iconLangBac }).addTo(mapInstance)
+
   //Add Toilets
   toiletLayer.value = L.layerGroup(
     toiletData.map((item) => {
@@ -298,9 +326,9 @@ onMounted(() => {
       marker.on('click', () => {
         selectedName.value = item.name
         selectedDescription.value = item.description
-        .replace(/Tên chương trình:/, '<strong>Tên chương trình:</strong>')
-        .replace(/Thời gian:/, '<strong>Thời gian:</strong>')
-        .replace(/Ý nghĩa chương trình:/, '<strong>Ý nghĩa chương trình:</strong>')
+        .replace(/Tên chương trình:/g, '<strong>Tên chương trình:</strong>')
+        .replace(/Thời gian:/g, '<strong>Thời gian:</strong>')
+        .replace(/Ý nghĩa chương trình:/g, '<strong>Ý nghĩa chương trình:</strong>')
         .replace(/; \s*/g, '<br>')
         showControlBar.value = true
       })
@@ -326,6 +354,18 @@ onMounted(() => {
       marker.on('click', () => {
         selectedName.value = item.name
         selectedDescription.value = item.description.replace(/; \s*/g, '<br>')
+        showControlBar.value = true
+      })
+      return marker
+    })
+  )
+  //Add diem ho tro y te
+  yteLayer.value = L.layerGroup(
+    yteData.map((item) => {
+      const marker = L.marker([item.lat, item.lng], { icon: yteIcon})
+      marker.on('click', () => {
+        selectedName.value = item.name
+        selectedDescription.value = item.description
         showControlBar.value = true
       })
       return marker
@@ -364,7 +404,19 @@ onMounted(() => {
 })
 
 //Chia bang dia diem nha ve sinh cong cong
-const descriptionTableRows = computed(() => {
+const toiletDescriptionTableRows = computed(() => {
+  if (!selectedDescription.value) return []
+  const regex = /(\d+)\.([^:]+):\s*([^,]+)(?:,|$)/g
+  const matches = [...selectedDescription.value.matchAll(regex)]
+
+  return matches.map(match => ({
+    number: match[1].trim(),
+    name: match[2].trim(),
+    address: match[3].trim()
+  }))
+})
+//Chia bang dia diem ho tro y te
+const yteDescriptionTableRows = computed(() => {
   if (!selectedDescription.value) return []
   const regex = /(\d+)\.([^:]+):\s*([^,]+)(?:,|$)/g
   const matches = [...selectedDescription.value.matchAll(regex)]
@@ -383,7 +435,7 @@ watch(displayMode, (mode) => {
   selectedDescription.value = ''
   if (!mapInstance) return
 
-  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value].forEach((layer) => {
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -399,6 +451,8 @@ watch(displayMode, (mode) => {
     ledLayer.value.addTo(mapInstance)
   } else if (mode === 'phaos' && phaoLayer.value) {
     phaoLayer.value.addTo(mapInstance)
+  } else if (mode === 'ytes' && yteLayer.value) {
+    yteLayer.value.addTo(mapInstance)
   }
 })
 </script>
