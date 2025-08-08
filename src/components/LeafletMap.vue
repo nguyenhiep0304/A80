@@ -114,7 +114,7 @@ import yteData from '../assets/data/ytes'
 const displayModes = [
   { label: 'Sự kiện', value: 'events' },
 
-  { label: 'Tuyến đường', value: 'routes' },
+  //{ label: 'Tuyến đường', value: 'routes' },
 
   { label: 'Pháo hoa', value: 'phaos' },
 
