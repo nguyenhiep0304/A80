@@ -48,10 +48,12 @@
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+
             <div v-else-if="displayMode === 'phaos' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
+            
             <div v-else-if="displayMode === 'ytes' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <table v-if="yteDescriptionTableRows.length" class="description-table">
@@ -77,20 +79,25 @@
             <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
-            <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
+            <!-- <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p> -->
             <p v-else-if="displayMode === 'ytes'">Đang hiển thị địa điểm hỗ trợ y tế.</p>
 
             <div v-else-if="selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
-              <p style="margin: 4px 0 0;">{{ selectedDescription }}</p>
+              <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
           </div>
-
-
           
         </div>
       </transition>
 
+    </div>
+
+    <!-- button mobile -->
+    <div class="leaflet-top leaflet-right">
+      <div class="leaflet-control custom-dropdown">
+
+      </div>
     </div>
   </div>
 
@@ -112,17 +119,17 @@ import yteData from '../assets/data/ytes'
 
 
 const displayModes = [
-  { label: 'Sự kiện', value: 'events' },
+  { label: 'Sự kiện biểu diễn', value: 'events' },
 
-  //{ label: 'Tuyến đường', value: 'routes' },
+  { label: 'Tuyến đường diễu binh', value: 'routes' },
 
-  { label: 'Pháo hoa', value: 'phaos' },
+  { label: 'Điểm bắn pháo hoa', value: 'phaos' },
 
-  { label: 'Màn hình Led', value: 'leds' },
+  { label: 'Điểm lắp đặt màn hình led', value: 'leds' },
 
-  { label: 'Nhà vệ sinh', value: 'toilets' },
+  { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
 
-  {label: 'Điểm y tế', value: 'ytes'}
+  {label: 'Điểm hỗ trợ y tế', value: 'ytes'}
 ]
 
 
@@ -131,6 +138,11 @@ const displayMode = ref('')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
+
+function showPhaoInfo(phao) {
+  selectedName.value = phao.name
+  selectedDescription.value = phao.description
+}
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -223,8 +235,8 @@ const eventIcon = L.icon({
 })
 //Icon Led monitor
 const ledIcon = L.icon({
-  iconUrl: new URL('../assets/images/ledmonitor.svg', import.meta.url).href,
-  iconSize: [32, 32],
+  iconUrl: new URL('../assets/images/ledmonitor.png', import.meta.url).href,
+  iconSize: [48, 48],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
 })
@@ -303,7 +315,14 @@ onMounted(() => {
 
   baDinhArea.on('click', () => {
     selectedName.value = 'Khu vực quảng trường Ba Đình'
-    selectedDescription.value= ''
+    const rawDescription = 'Thời gian: 6h00 02/09/2025. ; Ý nghĩa chương trình: Lễ diễu binh, diễu hành kỷ niệm 80 năm Cách mạng tháng Tám thành công và Quốc khánh nước Cộng hòa xã hội chủ nghĩa Việt Nam sẽ diễn ra vào sáng ngày 2 tháng 9 năm 2025.'
+
+    const formattedDescription = rawDescription
+    .replace(/Thời gian:/g, '<strong>Thời gian:</strong>')
+    .replace(/Ý nghĩa chương trình:/g, '<strong>Ý nghĩa chương trình:</strong>')
+    .replace(/; ?/g, '<br>')  // thay dấu phẩy (và khoảng trắng) bằng xuống dòng
+
+    selectedDescription.value = formattedDescription
     showControlBar.value = true
   })
 
@@ -328,7 +347,7 @@ onMounted(() => {
       marker.on('click', () => {
         selectedName.value = item.name
         selectedDescription.value = item.description
-        .replace(/Tên chương trình:/g, '<strong>Tên chương trình:</strong>')
+        .replace(/Địa điểm:/g, '<strong>Địa điểm:</strong>')
         .replace(/Thời gian:/g, '<strong>Thời gian:</strong>')
         .replace(/Ý nghĩa chương trình:/g, '<strong>Ý nghĩa chương trình:</strong>')
         .replace(/; \s*/g, '<br>')
@@ -446,6 +465,19 @@ watch(displayMode, (mode) => {
     }
   })
 
+  // 🟡 Chặn truy cập "Tuyến đường diễu binh" trước ngày 20/8/2025
+  if (mode === 'routes') {
+    const now = new Date()
+    const releaseDate = new Date(2025, 7, 20) // tháng 8 là 7 trong JS
+    if (now < releaseDate) {
+      selectedName.value = 'Tuyến đường diễu binh'
+      selectedDescription.value = 'Thông tin tuyến đường đang được cập nhật'
+      showControlBar.value = true
+      return
+    }
+    routeLayer.value.addTo(mapInstance)
+  } 
+
   if (mode === 'toilets' && toiletLayer.value) {
     toiletLayer.value.addTo(mapInstance)
   } else if (mode === 'events' && eventLayer.value) {
@@ -465,7 +497,7 @@ watch(displayMode, (mode) => {
 <style scoped>
 .menu-control {
   position: absolute;
-  top: 4.6rem;
+  top: 5rem;
   right: 0.5rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
@@ -487,22 +519,7 @@ watch(displayMode, (mode) => {
   max-width: 360px;
 }
 
-.menu-button {
 
-  max-width: 100px;
-  color: white;
-  background-color: #3498db;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: center;
-  transition: background-color 0.3s;
-
-}
-
-.menu-button:hover {
-  background-color: #2980b9;
-}
 
 .control-content {
   flex: 1;
