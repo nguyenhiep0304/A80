@@ -1,7 +1,7 @@
 export default [
     {
         id: 1,
-        name: "Chương trình nghệ thuật đặc biệt kỷ niệm 80 năm Cách Mạng Tháng 8 thành công và Quốc khánh nước CHXHCN Việt Nam",
+        name: "Chương trình nghệ thuật đặc biệt: Hà Nội - Từ mùa Thu lịch sử năm 1945",
         lat: 21.02394805625261,
         lng: 105.85737230045383,
         description: "Địa điểm: Quảng trường Cách mạng Tháng Tám ; Thời gian: 20h00  ngày 15/8/2025; Ý nghĩa chương trình: Chương trình vừa mang tính chính luận vừa mang tính sử thi về một trong những sự kiện lịch sử quan trọng nhất củ đất nước, với nhiều thủ pháp sáng tạo tinh hoa nghệ thuật của các loại hình nghệ thuật bác học dân tộc và quốc tế, ứng dụng công nghệ kỹ xảo hiện đại tương tác với một số thể loại, phong cách nghệ thuật đương đại."

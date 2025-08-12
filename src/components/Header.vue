@@ -153,7 +153,7 @@ function selectMode(value) {
 }
 
 .mode-buttons button {
-    background: linear-gradient(135deg, #ff0015, #ffc371);
+    background: #b11e22;
     color: white;
     border: none;
     padding: 0.4rem 0.8rem;
@@ -170,7 +170,7 @@ function selectMode(value) {
 }
 
 .mode-buttons button.active {
-    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    background: #c54f53;
     transform: scale(1.05);
     color: white;
 }
@@ -186,7 +186,7 @@ function selectMode(value) {
     background: none;
     max-width: 100px;
     color: white;
-    background: linear-gradient(135deg, #ff0000, #ffc371);
+    background: #b11e22;
     font-size: 1rem;
     font-weight: 400;
     cursor: pointer;
@@ -240,11 +240,11 @@ function selectMode(value) {
         line-height: 1.4rem;
         align-content: center;
         border-radius: 0.4rem;
-        background: linear-gradient(135deg, #ff0000, #ffc371);
+        background: #b11e22;
     }
 
     .mobile-only button.active {
-        background: linear-gradient(135deg, #36d1dc, #5b86e5);
+        background: #c54f53;
         transform: scale(1.05);
         color: white;
     }

@@ -313,7 +313,7 @@ onMounted(() => {
 
   baDinhArea.on('click', () => {
     selectedName.value = 'Khu vực quảng trường Ba Đình'
-    const rawDescription = 'Thời gian: 6h00 02/09/2025. ; Ý nghĩa chương trình: Lễ diễu binh, diễu hành kỷ niệm 80 năm Cách mạng tháng Tám thành công và Quốc khánh nước Cộng hòa xã hội chủ nghĩa Việt Nam sẽ diễn ra vào sáng ngày 2 tháng 9 năm 2025.'
+    const rawDescription = 'Thời gian: 6h30 02/09/2025. ; Ý nghĩa chương trình: Lễ diễu binh, diễu hành kỷ niệm 80 năm Cách mạng tháng Tám thành công và Quốc khánh nước Cộng hòa xã hội chủ nghĩa Việt Nam sẽ diễn ra vào sáng ngày 2 tháng 9 năm 2025.'
 
     const formattedDescription = rawDescription
     .replace(/Thời gian:/g, '<strong>Thời gian:</strong>')

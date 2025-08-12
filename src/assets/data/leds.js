@@ -60,7 +60,7 @@ export default [
         name: "Khu vực màn hình LIVE",
         lat: 21.02400025128944,
         lng: 105.85737714049685,
-        description: "Quảng trường CM tháng 8"
+        description: "Quảng trường Cách mạng tháng 8"
     },
     {
         id: 10,

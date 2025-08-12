@@ -25,7 +25,7 @@ export default [
         name: "Tràng Thi",
         lat: 21.026089214306236,
         lng: 105.85149805073449,
-        description: "1. Cổng chính Công an Quận Hoàn Kiếm cũ: 2 Tràng Thi, 2. Cổng tiếp dân Công an Quận Hoàn Kiếm cũ: 2 Tràng Thi, 3. Quán cafe AHA: 22 Tràng Thi, 4. Viện răng hàm mặt Trung Ương: 40 Tràng Thi, 5. Ủy ban Mặt trận tổ Quốc: 46 Tràng Thi, 6.Quán nét Huế: 198 Hàng Bông"
+        description: "1. Cổng chính Công an Quận Hoàn Kiếm cũ: 2 Tràng Thi, 2. Cổng tiếp dân Công an Quận Hoàn Kiếm cũ: 2 Tràng Thi, 3. Quán cafe AHA: 22 Tràng Thi, 4. Viện răng hàm mặt Trung Ương: 40 Tràng Thi, 5. Ủy ban Mặt trận Tổ Quốc: 46 Tràng Thi, 6.Quán nét Huế: 198 Hàng Bông"
     },
     {
         id: 5,
@@ -53,7 +53,7 @@ export default [
         name: "Phố Nguyễn Thái Học",
         lat: 21.030677715458626,
         lng: 105.83545545366874,
-        description: "1. Bệnh Viện Xanh Pôn: 72A Nguyễn Thái Học, 2.Trường Tiểu học Phan Chu Chinh: 40  Nguyễn Thái Học, 3. Trường Mần Non 1/6: , 4. Trạm Y Tế Điện Biên: 142  Nguyễn Thái Học"
+        description: "1. Bệnh Viện Xanh Pôn: 72A Nguyễn Thái Học, 2.Trường Tiểu học Phan Chu Chinh: 40  Nguyễn Thái Học, 3. Trường Mầm Non 1/6: , 4. Trạm Y Tế Điện Biên: 142  Nguyễn Thái Học"
     },
     {
         id: 9,

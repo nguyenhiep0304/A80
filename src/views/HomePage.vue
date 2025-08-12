@@ -29,11 +29,11 @@ const router = useRouter();
 
     .main-button{
         position: absolute;
-        bottom: 5rem;
+        bottom: 3rem;
         transform: translate(-50%, 50%);
         font-size: 1.2rem;
         color:white;
-        background-color: red;
+        background: #b11e22;
         white-space: nowrap;
     }
 
