@@ -82,6 +82,24 @@ function selectMode(value) {
     -webkit-overflow-scrolling: touch;
 }
 
+/* Chrome, Edge, Safari */
+.top-nav::-webkit-scrollbar {
+    height: 6px; /* Thanh cuộn ngang */
+}
+
+.top-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.top-nav::-webkit-scrollbar-thumb {
+    background: #888; /* Màu thanh cuộn */
+    border-radius: 3px;
+}
+
+.top-nav::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 /*
 .nav-logo {
     position: relative;

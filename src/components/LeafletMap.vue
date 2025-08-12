@@ -7,8 +7,9 @@
   />
 
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
+    <img src="../assets/images/hanoi logo vuong-01.png" alt="logo" class="map-logo">
     <div :class="['menu-control', { expanded: showControlBar }]">
-      
+
       <!-- Nôi dung thông tin -->
       <transition name="fade">
         <div v-if="showControlBar" class="control-content">
@@ -493,6 +494,17 @@ watch(displayMode, (mode) => {
 </script>
 
 <style scoped>
+
+.map-logo {
+  position: absolute;
+  top: 10px;      /* cách viền trên */
+  left: 10px;     /* cách viền trái */
+  width: 60px;    /* kích thước ảnh */
+  height: auto;
+  z-index: 1000;  /* nổi trên bản đồ */
+  pointer-events: none; /* để click xuyên qua ảnh */
+}
+
 .menu-control {
   position: absolute;
   top: 1rem;
@@ -516,7 +528,6 @@ watch(displayMode, (mode) => {
   min-width: 240px;
   max-width: 360px;
 }
-
 
 
 .control-content {
