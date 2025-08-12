@@ -1,10 +1,6 @@
 <template>
 <!-- File: HomePage.vue -->
     <div id="map">
-        <div class="guide-container">
-            <img src="../assets/images/bandoUIguide.png" alt="guide"/>
-        </div>
-
         <div class="min-h-screen flex flex-col items justify-center bg-cover bg-center bg-no-repeat bg-fixed">
             <button @click="goToMap" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded font-semibold main-button">BẮT ĐẦU KHÁM PHÁ</button>
         </div>
@@ -29,19 +25,6 @@ const router = useRouter();
         background-size: cover;    /* Bao phủ toàn bộ */
         background-position: center center; /* Canh giữa */
         background-repeat: no-repeat;
-    }
-
-    .guide-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .guide-container img {
-        position: absolute;
-        bottom: 3rem;
-        object-fit: contain;
-        transform: scale(60%);
     }
 
     .main-button{

@@ -51,6 +51,7 @@
 
             <div v-else-if="displayMode === 'phaos' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
+              <p style="margin: 4px 0 0;" v-html="selectedLocation"></p>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
             </div>
             
@@ -75,12 +76,12 @@
             </div>
 
             
-            <p v-else-if="displayMode === 'toilets'">Đang hiển thị nhà vệ sinh công cộng.</p>
-            <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
+            <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
+            <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
-            <!-- <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p> -->
             <p v-else-if="displayMode === 'ytes'">Đang hiển thị địa điểm hỗ trợ y tế.</p>
+            <p v-else-if="displayMode === 'toilets'">Đang hiển thị nhà vệ sinh công cộng.</p>
 
             <div v-else-if="selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
@@ -127,9 +128,9 @@ const displayModes = [
 
   { label: 'Điểm lắp đặt màn hình led', value: 'leds' },
 
+  {label: 'Điểm hỗ trợ y tế', value: 'ytes'},
+  
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
-
-  {label: 'Điểm hỗ trợ y tế', value: 'ytes'}
 ]
 
 
@@ -138,11 +139,7 @@ const displayMode = ref('')
 const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
-
-function showPhaoInfo(phao) {
-  selectedName.value = phao.name
-  selectedDescription.value = phao.description
-}
+const selectedLocation = ref('')
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -374,6 +371,7 @@ onMounted(() => {
       const marker = L.marker([item.lat, item.lng], { icon: phaoIcon })
       marker.on('click', () => {
         selectedName.value = item.name
+        selectedLocation.value = item.location
         selectedDescription.value = item.description.replace(/; \s*/g, '<br>')
         showControlBar.value = true
       })
@@ -497,7 +495,7 @@ watch(displayMode, (mode) => {
 <style scoped>
 .menu-control {
   position: absolute;
-  top: 5rem;
+  top: 1rem;
   right: 0.5rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
@@ -589,4 +587,5 @@ select {
 .fade-leave-to {
   opacity: 0;
 }
+
 </style>
