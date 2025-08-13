@@ -64,7 +64,7 @@ function selectMode(value) {
     left: 50%;
     transform: translateX(-50%);
     width: max-content;
-    max-width: 80vw;
+    max-width: 70vw;
     z-index: 1000;
     border-radius: 0.75rem;
 
