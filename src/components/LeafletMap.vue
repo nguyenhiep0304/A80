@@ -7,7 +7,7 @@
   />
 
   <div id="map" style="height: 100vh" @click.self="hideControlBar">
-    <img src="../assets/images/hanoi logo vuong-01.png" alt="logo" class="map-logo">
+    <img src="../assets/images/hanoi logo.png" alt="logo" class="map-logo">
     <div :class="['menu-control', { expanded: showControlBar }]">
 
       <!-- Nôi dung thông tin -->
@@ -127,10 +127,10 @@ const displayModes = [
 
   { label: 'Điểm bắn pháo hoa', value: 'phaos' },
 
-  { label: 'Điểm lắp đặt màn hình led', value: 'leds' },
+  { label: 'Điểm xem trực tiếp', value: 'leds' },
 
-  {label: 'Điểm hỗ trợ y tế', value: 'ytes'},
-  
+  { label: 'Điểm hỗ trợ y tế', value: 'ytes' },
+
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
 ]
 

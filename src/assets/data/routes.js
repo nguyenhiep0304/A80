@@ -99,7 +99,7 @@ export default [
   },
   {
     id: 8,
-    name: "Tuyen duong rut cua khoi xe ve SVD my dinh",
+    name: "Tuyến đường rút khối xe về SVD Mỹ Đình",
     path: [
       [21.020498371758954, 105.76611054339655],//My Dinh
       [21.017625996374424, 105.76659385837202],
@@ -137,7 +137,7 @@ export default [
   },
   {
     id: 9,
-    name: "Tuyen duong rut khoi xe",
+    name: "Tuyến đường rút khối xe về Bộ Quốc Phòng",
     path: [
       [21.03203397302913, 105.83420050242457],
       [21.030832156595192, 105.8403657972631],
