@@ -81,7 +81,6 @@ function selectMode(value) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    scrollbar-behavior: smooth;
 }
 
 /* Chrome, Edge, Safari */
@@ -146,10 +145,8 @@ function selectMode(value) {
     overflow-x: auto;
     white-space: nowrap;
     min-width: max-content;
-    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    scrollbar-behavior: smooth;
 }
 
 .mode-buttons::-webkit-scrollbar {
