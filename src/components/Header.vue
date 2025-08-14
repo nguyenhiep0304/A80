@@ -64,7 +64,7 @@ function selectMode(value) {
     left: 50%;
     transform: translateX(-50%);
     width: max-content;
-    max-width: 70vw;
+    max-width: 80vw;
     z-index: 1000;
     border-radius: 0.75rem;
 
@@ -145,6 +145,7 @@ function selectMode(value) {
     overflow-x: auto;
     white-space: nowrap;
     min-width: max-content;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }

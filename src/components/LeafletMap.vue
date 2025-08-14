@@ -196,15 +196,22 @@ const importantPoints = [
   { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
   { name: 'Nhà hát Lớn Hà Nội', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
-  { name: 'Điểm tập kết Cung thể thao Quần Ngựa', lat:21.04048592433416, lng: 105.81586602736573, icon: iconTapKet },
-  { name: 'Điểm tập kết Công viên Thống Nhất', lat: 21.01726037172459, lng: 105.84504257602896, icon: iconTapKet },
-  { name: 'Điểm tập kết Nhà hát Lớn Hà Nội', lat: 21.024282457567335, lng: 105.85726973768058, icon: iconTapKet },
-  { name: 'Điểm tập kết Bộ Quốc Phòng', lat: 21.035639552104428, lng: 105.84119256591276, icon: iconTapKet },
-  { name: 'Điểm tập kết Mỹ Đình', lat: 21.020498371758954, lng: 105.76611054339655, icon: iconTapKet },
-  { name: 'Điểm xuất phát Yên Phụ', lat: 21.05065442276042, lng: 105.83994491121301, icon: iconXuatPhat },
-  { name: 'Điểm xuất phát Quán Thánh', lat: 21.042791677122025, lng: 105.84015553085231, icon: iconXuatPhat },
-  { name: 'Điểm xuất phát Quán Thánh Phan Đình Phùng', lat: 21.04098432786458, lng: 105.84005647224379, icon: iconXuatPhat },
-  { name: 'Điểm xuất phát Hoàng Hoa Thám', lat: 21.04174771084369, lng: 105.83128881475909, icon: iconXuatPhat },
+  { name: 'Điểm tập kết Cung thể thao Quần Ngựa', lat:21.04045445844579, lng:  105.81615992750083, icon: iconTapKet },
+  { name: 'Điểm tập kết Công viên Thống Nhất', lat: 21.017185064858552, lng: 105.8443765749404, icon: iconTapKet },
+  { name: 'Điểm tập kết Nhà hát Lớn Hà Nội', lat: 21.02443620543749, lng: 105.85693453870182, icon: iconTapKet },
+  { name: 'Điểm tập kết Bộ Quốc Phòng', lat: 21.03413319200617, lng: 105.84115579463645, icon: iconTapKet },
+  { name: 'Điểm tập kết Mỹ Đình', lat: 21.020450972440678, lng: 105.76604855878989, icon: iconTapKet },
+  { name: 'Điểm tập kết Mỹ Đình', lat: 21.020697778355945, lng: 105.7666721915543, icon: iconTapKet },
+  { name: 'Điểm tập kết Bách Thảo', lat: 21.038301886769077, lng: 105.83102128051381, icon: iconTapKet },
+  { name: 'Điểm tập kết Sân vận động Hàng Đẫy', lat: 21.030078087336555, lng: 105.83230789220258, icon: iconTapKet },
+  { name: 'Điểm tập kết Sân vận động Hàng Đẫy', lat: 21.029711271941636, lng: 105.83366829492047, icon: iconTapKet },
+
+
+
+  { name: 'Điểm xuất phát Quán Thánh', lat: 21.04025451657421, lng: 105.84712118686237, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Thanh Niên', lat: 21.05019459142148, lng: 105.8392539785411, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Hoàng Hoa Thám', lat: 21.0419015365539, lng: 105.83366705846367, icon: iconXuatPhat },
+  { name: 'Điểm xuất phát Phan Đình Phùng', lat: 21.039963782333963, lng: 105.84712628916525, icon: iconXuatPhat },
 ]
 
 
@@ -392,19 +399,39 @@ onMounted(() => {
     })
   )
   //Add routes
+  // routeData.forEach(route => {
+  //   const polyline = L.polyline(route.path, {
+  //     color: route.color,
+  //     weight: 5,
+  //     opacity: 0.8
+  //   })
+  //   polyline.on('click', () => {
+  //     selectedName.value = route.name,
+  //       selectedDescription.value = route.description.replace(/,\s*/g, '<br>')
+  //     showControlBar.value = true
+  //   })
+  //   routeLayer.value.addLayer(polyline)
+  // })
+
+  //ADD routes update
   routeData.forEach(route => {
-    const polyline = L.polyline(route.path, {
-      color: route.color,
-      weight: 5,
-      opacity: 0.8
+    route.paths.forEach(segment => {
+      const polyline = L.polyline(segment.path, {
+        color: segment.color,
+        weight: 5,
+        opacity: 0.8
+      })
+
+      polyline.on('click', () => {
+        selectedName.value = route.name
+        selectedDescription.value = route.description
+        showControlBar.value = true
+      })
+
+      routeLayer.value.addLayer(polyline)
     })
-    polyline.on('click', () => {
-      selectedName.value = route.name,
-        selectedDescription.value = route.description.replace(/,\s*/g, '<br>')
-      showControlBar.value = true
-    })
-    routeLayer.value.addLayer(polyline)
   })
+
 
   importantPoints.forEach((point) => {
     const marker = L.marker([point.lat, point.lng], {
@@ -465,17 +492,17 @@ watch(displayMode, (mode) => {
   })
 
   // 🟡 Chặn truy cập "Tuyến đường diễu binh" trước ngày 20/8/2025
-  if (mode === 'routes') {
-    const now = new Date()
-    const releaseDate = new Date(2025, 7, 20) // tháng 8 là 7 trong JS
-    if (now < releaseDate) {
-      selectedName.value = 'Tuyến đường diễu binh'
-      selectedDescription.value = 'Thông tin tuyến đường đang được cập nhật'
-      showControlBar.value = true
-      return
-    }
-    routeLayer.value.addTo(mapInstance)
-  } 
+  // if (mode === 'routes') {
+  //   const now = new Date()
+  //   const releaseDate = new Date(2025, 7, 20) // tháng 8 là 7 trong JS
+  //   if (now < releaseDate) {
+  //     selectedName.value = 'Tuyến đường diễu binh'
+  //     selectedDescription.value = 'Thông tin tuyến đường đang được cập nhật'
+  //     showControlBar.value = true
+  //     return
+  //   }
+  //   routeLayer.value.addTo(mapInstance)
+  // } 
 
   if (mode === 'toilets' && toiletLayer.value) {
     toiletLayer.value.addTo(mapInstance)
