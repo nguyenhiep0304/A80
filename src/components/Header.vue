@@ -231,7 +231,7 @@ function selectMode(value) {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         gap: 6px;
-        z-index: 999;
+        z-index: 1001;
     }
 
     .mobile-only button {

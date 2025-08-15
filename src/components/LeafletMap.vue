@@ -134,11 +134,6 @@
           </li>
         </ul>  
           <button class="showAll" @click="showAllRoutes">Hiển thị tất cả</button>
-        <!-- Thông tin tuyến đường đã chọn -->
-        <!-- <div v-if="selectedName" class="route-info">
-          <h3 style="margin: 0;">{{ selectedName }}</h3>
-          <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
-        </div> -->
       </div>
 
     <!-- button mobile -->
@@ -152,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-rotatedmarker'
@@ -187,7 +182,9 @@ const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
 const selectedLocation = ref('')
-const selectedRouteId = ref(null)
+const isMobile = ref(false)
+const isRouteActive = ref(false)
+
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -383,6 +380,14 @@ function showAllRoutes() {
   selectedDescription.value = ''
 }
 
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 768
+  if(!isMobile.value) {
+    // Do something for desktop
+    isRouteActive.value = true
+  }
+}
+
 onMounted(() => {
   const infoBox = document.querySelector('.info-box')
   const routeList = document.getElementById('routes-list')
@@ -408,7 +413,6 @@ onMounted(() => {
   if (menuControl) {
       L.DomEvent.disableScrollPropagation(menuControl)
   }
-    
 
   // Thiết lập bản đồ
   const bounds = L.latLngBounds([
@@ -811,10 +815,9 @@ select {
 @media screen and (max-width: 768px) {
   .routes-list{
     /* position: relative; */
-    left: 50%;
-    transform: translateX(-50%);
+    max-width: 240px;
     bottom: 4rem;
-    right: auto;
+    right: 0;
     margin: 0;
   }
 }
