@@ -119,8 +119,8 @@
 
     <!-- Danh sách tuyến đường -->
       <div v-if="displayMode === 'routes'" class="routes-list"
-      @mouseenter="map.scrollWheelZoom.disable()"
-      @mouseleave="map.scrollWheelZoom.enable()"
+        @mouseenter="map.scrollWheelZoom.disable()"
+        @mouseleave="map.scrollWheelZoom.enable()"
       >
         <div class="routes-header">Danh sách tuyến đường</div>
         <ul>
@@ -240,9 +240,14 @@ const iconXuatPhat = L.icon({
 
 const importantPoints = [
   { name: 'Cung thể thao Quần Ngựa', lat: 21.040457403537033, lng: 105.81447654890036, icon: iconQuanNgua },
+  { name: 'Sân vận động Quốc gia Mỹ Đình', lat: 21.020693773632996, lng: 105.76389794557704, icon: iconQuanNgua },
+  { name: 'Sân vận động Hàng Đẫy', lat: 21.02998137499817, lng: 105.83293464453926, icon: iconQuanNgua },
   { name: 'Lăng Chủ tịch Hồ Chí Minh', lat: 21.037127409547015, lng: 105.83467594057245, icon: iconLangBac },
   { name: 'Nhà hát Lớn Hà Nội', lat:21.024483794503695, lng: 105.85765305967625, icon: iconNhaHatLon },
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
+  { name: 'Công Viên Bách Thảo', lat: 21.040434538547547, lng: 105.8308594450715, icon: iconThongNhat },
+
+
   { name: 'Điểm tập kết Cung thể thao Quần Ngựa', lat:21.04045445844579, lng:  105.81615992750083, icon: iconTapKet },
   { name: 'Điểm tập kết Công viên Thống Nhất', lat: 21.017185064858552, lng: 105.8443765749404, icon: iconTapKet },
   { name: 'Điểm tập kết Nhà hát Lớn Hà Nội', lat: 21.02443620543749, lng: 105.85693453870182, icon: iconTapKet },
@@ -252,9 +257,6 @@ const importantPoints = [
   { name: 'Điểm tập kết Bách Thảo', lat: 21.038301886769077, lng: 105.83102128051381, icon: iconTapKet },
   { name: 'Điểm tập kết Sân vận động Hàng Đẫy', lat: 21.030078087336555, lng: 105.83230789220258, icon: iconTapKet },
   { name: 'Điểm tập kết Sân vận động Hàng Đẫy', lat: 21.029711271941636, lng: 105.83366829492047, icon: iconTapKet },
-
-
-
   { name: 'Điểm xuất phát Quán Thánh', lat: 21.04025451657421, lng: 105.84712118686237, icon: iconXuatPhat },
   { name: 'Điểm xuất phát Thanh Niên', lat: 21.05019459142148, lng: 105.8392539785411, icon: iconXuatPhat },
   { name: 'Điểm xuất phát Hoàng Hoa Thám', lat: 21.0419015365539, lng: 105.83366705846367, icon: iconXuatPhat },
@@ -355,19 +357,51 @@ function showOnlyRoute(routeId) {
   }
 }
 
+function showImportantPoints() {
+  importantPoints.forEach((point) => {
+    const marker = L.marker([point.lat, point.lng], {
+      icon: point.icon,
+      title: point.name,
+    })
+
+    marker.on('click', () => {
+      selectedName.value = point.name
+      selectedDescription.value = point.description || ''
+      showControlBar.value = true
+    })
+
+    routeLayer.value.addLayer(marker)
+  })
+}
+
 //Hien tat ca tuyen duong
 function showAllRoutes() {
   routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
   drawAllRoutes()
+  showImportantPoints()
   selectedName.value = ''
   selectedDescription.value = ''
 }
 
 onMounted(() => {
   const infoBox = document.querySelector('.info-box')
+  const routeList = document.getElementById('routes-list')
   if (infoBox) {
       // Ngăn sự kiện cuộn từ phần tử này truyền lên bản đồ
       L.DomEvent.disableScrollPropagation(infoBox)
+  }
+  if (routeList) {
+    L.DomEvent.disableScrollPropagation(routeList)
+    routeList.addEventListener('touchstart', () => {
+      map.dragging.disable()
+      map.touchZoom.disable()
+    })
+
+    // Khi kết thúc chạm -> bật lại tương tác map
+    routeList.addEventListener('touchend', () => {
+      map.dragging.enable()
+      map.touchZoom.enable()
+    })
   }
 
   const menuControl = document.querySelector('.menu-control')
@@ -530,7 +564,6 @@ onMounted(() => {
     })
   })  
 
-  
   importantPoints.forEach((point) => {
     const marker = L.marker([point.lat, point.lng], {
       icon: point.icon,
@@ -544,6 +577,7 @@ onMounted(() => {
     })
 
     routeLayer.value.addLayer(marker)
+
   })
 
 })
@@ -728,7 +762,7 @@ select {
   bottom: 1rem;
   right: 1rem;
   min-width: 240px;
-  max-width: 360px;
+  max-width: 380px;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
@@ -774,5 +808,14 @@ select {
   background: #e0f0ff;
 }
 
-
+@media screen and (max-width: 768px) {
+  .routes-list{
+    /* position: relative; */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 4rem;
+    right: auto;
+    margin: 0;
+  }
+}
 </style>
