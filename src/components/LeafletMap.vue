@@ -37,10 +37,33 @@
                 </tbody>
               </table>
             </div>
-            <div v-else-if="displayMode === 'routes' && selectedName">
+
+            <!-- <div v-else-if="displayMode === 'routes'">
+              <h3 style="margin: 0;">Danh sách tuyến đường</h3>
+              <ul class="route-list">
+                <li
+                  v-for="route in routes"
+                  :key="route.id"
+                  :class="{ active: selectedRouteId === route.id }"
+                  @click="showOnlyRoute(route.id)"
+                  style="cursor: pointer; padding: 4px 0;"
+                >
+                  {{ route.name }}
+                </li>
+              </ul>
+
+              <div v-if="selectedName">
+                <h4 style="margin: 8px 0 0;">{{ selectedName }}</h4>
+                <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+              </div>
+              <p v-else>Chọn một tuyến để xem chi tiết.</p>
+            </div> -->
+
+            <!-- <div v-else-if="displayMode === 'routes' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
-            </div>
+            </div> -->
+
             <div v-else-if="displayMode === 'events' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
@@ -78,7 +101,7 @@
 
             
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
-            <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p>
+            <!-- <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p> -->
             <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
             <p v-else-if="displayMode === 'leds'">Đang hiển thị bảng led sự kiện.</p>
             <p v-else-if="displayMode === 'ytes'">Đang hiển thị địa điểm hỗ trợ y tế.</p>
@@ -92,8 +115,31 @@
           
         </div>
       </transition>
-
     </div>
+
+    <!-- Danh sách tuyến đường -->
+      <div v-if="displayMode === 'routes'" class="routes-list"
+      @mouseenter="map.scrollWheelZoom.disable()"
+      @mouseleave="map.scrollWheelZoom.enable()"
+      >
+        <div class="routes-header">Danh sách tuyến đường</div>
+        <ul>
+          <li
+            v-for="route in routeData"
+            :key="route.id"
+            @click="showOnlyRoute(route.id)"
+            style="cursor: pointer;"
+          >
+            {{ route.name }}
+          </li>
+        </ul>  
+          <button class="showAll" @click="showAllRoutes">Hiển thị tất cả</button>
+        <!-- Thông tin tuyến đường đã chọn -->
+        <!-- <div v-if="selectedName" class="route-info">
+          <h3 style="margin: 0;">{{ selectedName }}</h3>
+          <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
+        </div> -->
+      </div>
 
     <!-- button mobile -->
     <div class="leaflet-top leaflet-right">
@@ -141,6 +187,7 @@ const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
 const selectedLocation = ref('')
+const selectedRouteId = ref(null)
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -263,6 +310,57 @@ const yteIcon = L.icon({
 function stopWheelPropagation(event) {
   event.stopPropagation()
   event.preventDefault()
+}
+
+function drawAllRoutes() {
+  routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
+  routeData.forEach(route => {
+    route.paths.forEach(segment => {
+      const polyline = L.polyline(segment.path, {
+        color: segment.color,
+        weight: 5,
+        opacity: 0.8
+      })
+      polyline.on('click', () => {
+        selectedName.value = route.name
+        selectedDescription.value = route.description
+        showControlBar.value = true
+      })
+      routeLayer.value.addLayer(polyline)
+    })
+  })
+  routeLayer.value.addTo(map.value) // Thêm tất cả tuyến đường vào bản đồ
+}
+
+//Chi hien thi 1 tuyen duong
+function showOnlyRoute(routeId) {
+  routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
+  const route = routeData.find(r => r.id === routeId)
+  if (route) {
+    route.paths.forEach(segment => {
+      const polyline = L.polyline(segment.path, {
+        color: segment.color,
+        weight: 5,
+        opacity: 0.8
+      })
+      polyline.on('click', () => {
+        selectedName.value = route.name
+        selectedDescription.value = route.description
+        showControlBar.value = true
+      })
+      routeLayer.value.addLayer(polyline)
+    })
+    selectedName.value = route.name
+    selectedDescription.value = route.description
+  }
+}
+
+//Hien tat ca tuyen duong
+function showAllRoutes() {
+  routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
+  drawAllRoutes()
+  selectedName.value = ''
+  selectedDescription.value = ''
 }
 
 onMounted(() => {
@@ -430,9 +528,9 @@ onMounted(() => {
 
       routeLayer.value.addLayer(polyline)
     })
-  })
+  })  
 
-
+  
   importantPoints.forEach((point) => {
     const marker = L.marker([point.lat, point.lng], {
       icon: point.icon,
@@ -474,7 +572,6 @@ const yteDescriptionTableRows = computed(() => {
     address: match[3].trim()
   }))
 })
-
 
 watch(displayMode, (mode) => {
   const mapInstance = map.value
@@ -625,5 +722,57 @@ select {
 .fade-leave-to {
   opacity: 0;
 }
+
+.routes-list {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  min-width: 240px;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  z-index: 1000;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.routes-header {
+  padding: 12px;
+  background: linear-gradient(135deg, #007bff, #00b4ff);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+
+.routes-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.routes-list li {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #221313;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.routes-list li:hover {
+  background: #f5faff;
+  transform: translateX(4px);
+}
+
+.routes-list li:active {
+  background: #e0f0ff;
+}
+
 
 </style>
