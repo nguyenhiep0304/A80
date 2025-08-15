@@ -1,7 +1,7 @@
 export default [
   {
     id: 1,
-    name: "Tuyến đường nghị trượng - khối cờ Đảng 01",
+    name: "Tuyến đường nghi trượng - khối cờ Đảng 01",
     paths: [
       {
         path: [
@@ -23,11 +23,11 @@ export default [
         color: "#ff0000", // đỏ
       }
     ],
-    description: "Tuyến đường nghị trượng - khối cờ Đảng 01."
+    description: "Tuyến đường nghi trượng - khối cờ Đảng 01."
   },
   {
     id: 2,
-    name: "Tuyến đường nghị trượng - khối cờ Đảng 02",
+    name: "Tuyến đường nghi trượng - khối cờ Đảng 02",
     paths: [
       {
         path: [
@@ -45,7 +45,7 @@ export default [
         color: "#ff0000", // đỏ
       }
     ],
-    description: "Tuyến đường nghị trượng - khối cờ Đảng 02."
+    description: "Tuyến đường nghi trượng - khối cờ Đảng 02."
   },
   {
     id: 3,

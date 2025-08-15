@@ -699,7 +699,13 @@ watch(displayMode, (mode) => {
 
   if (!mapInstance) return
   
-  mapInstance.setView([21.037042159870733, 105.8358108494083], 16)
+    // mapInstance.setView([21.037042159870733, 105.8358108494083], 16)
+    // Chỉ định view và zoom theo chế độ
+  if (mode === 'phaos') {
+    mapInstance.setView([21.037042159870733, 105.8358108494083], 13) // zoom = 13
+  } else {
+    mapInstance.setView([21.037042159870733, 105.8358108494083], 16) // các chế độ khác zoom = 16
+  }
   
   ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
