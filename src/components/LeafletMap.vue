@@ -136,6 +136,44 @@
           <button class="showAll" @click="showAllRoutes">Hiển thị tất cả</button>
       </div>
 
+    <!-- DANH SÁCH TUYẾN ĐƯỜNG -->
+    <!-- <div
+      v-if="displayMode === 'routes'"
+      id="routes-list"
+      class="routes-list"
+      :class="{
+        'mobile-hidden': isMobile && !isRouteListOpen
+      }"
+      @mouseenter="map.scrollWheelZoom.disable()"
+      @mouseleave="map.scrollWheelZoom.enable()"
+      @touchstart="map.scrollWheelZoom.disable()"
+      @touchend="map.scrollWheelZoom.enable()"
+    >
+      <div class="routes-header">Danh sách tuyến đường</div>
+
+      <ul>
+        <li
+          v-for="route in routeData"
+          :key="route.id"
+          :class="{ active: selectedRouteId === route.id }"
+          @click="handleRouteClick(route.id)"
+        >
+          {{ route.name }}
+        </li>
+      </ul>
+        <button class="show-all-btn" @click="showAllRoutes">Hiển thị tất cả</button>
+    </div> -->
+
+    <!-- Nút hiển thị/ẩn danh sách tuyến đường (mobile) -->
+    <!-- <div
+      v-if="displayMode === 'routes' && isMobile"
+      class="routes-toggle-wrapper"
+    >
+      <button class="routes-toggle-btn" @click="toggleRoutesList">
+        {{ isRouteListOpen ? 'Thu gọn' : 'Hiện danh sách' }}
+      </button>
+    </div> -->
+
     <!-- button mobile -->
     <div class="leaflet-top leaflet-right">
       <div class="leaflet-control custom-dropdown">
@@ -175,6 +213,7 @@ const displayModes = [
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
 ]
 
+/* ---------- state chính ---------- */
 
 const map = ref(null)
 const displayMode = ref('')
@@ -182,9 +221,12 @@ const showControlBar = ref(false)
 const selectedName = ref('')
 const selectedDescription = ref('')
 const selectedLocation = ref('')
+const selectedRouteId = ref(null)
+/* Mobile UI state */
 const isMobile = ref(false)
-const isRouteActive = ref(false)
+const isRouteListOpen = ref(true) // mobile: vào 'routes' sẽ mở danh sách
 
+/* ---------- layers ---------- */
 
 const toiletLayer = ref(null)
 const eventLayer = ref(null)
@@ -192,6 +234,10 @@ const ledLayer = ref(null)
 const phaoLayer = ref(null)
 const yteLayer = ref(null)
 const routeLayer = ref(L.layerGroup())
+// Tạo layer chứa điểm đầu và cuối
+const startEndLayer = ref(L.layerGroup())
+
+/* ---------- icons & data quan trọng ---------- */
 
 const iconQuanNgua = L.icon({
   iconUrl: new URL('../assets/images/sanvandong.svg', import.meta.url).href,
@@ -305,11 +351,10 @@ const yteIcon = L.icon({
   iconAnchor: [16, 16],
   popupAnchor: [0, -32]
 })
-// 🟨 Chặn sự kiện scroll trong vùng .control-content để không ảnh hưởng bản đồ
-function stopWheelPropagation(event) {
-  event.stopPropagation()
-  event.preventDefault()
-}
+
+/* ---------- helpers ---------- */
+// const toggleControlBar = () => { showControlBar.value = !showControlBar.value }
+// const hideControlBar = () => { showControlBar.value = false }
 
 function drawAllRoutes() {
   routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
@@ -349,6 +394,7 @@ function showOnlyRoute(routeId) {
       })
       routeLayer.value.addLayer(polyline)
     })
+    showRouteStartEnd(route)
     selectedName.value = route.name
     selectedDescription.value = route.description
   }
@@ -380,34 +426,46 @@ function showAllRoutes() {
   selectedDescription.value = ''
 }
 
-function checkMobile() {
-  isMobile.value = window.innerWidth <= 768
-  if(!isMobile.value) {
-    // Do something for desktop
-    isRouteActive.value = true
-  }
+// Hàm đặt ngoài onMounted
+function showRouteStartEnd(route) {
+  startEndLayer.value.clearLayers()
+  if (!route || !route.paths || route.paths.length === 0) return
+
+  const firstSegment = route.paths[0].path
+  const lastSegment = route.paths[route.paths.length - 1].path
+
+  // Điểm xuất phát
+  L.marker(firstSegment[0], { icon: iconXuatPhat }).addTo(startEndLayer.value)
+  // Điểm tập kết
+  L.marker(lastSegment[lastSegment.length - 1], { icon: iconTapKet }).addTo(startEndLayer.value)
 }
 
+/* Click vào 1 item trong list (mobile sẽ tự thu gọn) */
+// function handleRouteClick (routeId) {
+//   showOnlyRoute(routeId)
+//   if (isMobile.value) isRouteListOpen.value = false
+// }
+
+/* Toggle list (mobile) */
+// function toggleRoutesList () {
+//   isRouteListOpen.value = !isRouteListOpen.value
+//   // sau khi DOM đổi, gắn lại guard chặn sự kiện chạm truyền xuống map
+//   nextTick(() => bindRouteListGuards())
+// }
+
 onMounted(() => {
+
+  // const check = () =>{isMobile.value = window.innerWidth <= 768}
+  // check()
+  // window.addEventListener('resize', check)
+
   const infoBox = document.querySelector('.info-box')
-  const routeList = document.getElementById('routes-list')
+
   if (infoBox) {
       // Ngăn sự kiện cuộn từ phần tử này truyền lên bản đồ
       L.DomEvent.disableScrollPropagation(infoBox)
   }
-  if (routeList) {
-    L.DomEvent.disableScrollPropagation(routeList)
-    routeList.addEventListener('touchstart', () => {
-      map.dragging.disable()
-      map.touchZoom.disable()
-    })
 
-    // Khi kết thúc chạm -> bật lại tương tác map
-    routeList.addEventListener('touchend', () => {
-      map.dragging.enable()
-      map.touchZoom.enable()
-    })
-  }
 
   const menuControl = document.querySelector('.menu-control')
   if (menuControl) {
@@ -430,6 +488,10 @@ onMounted(() => {
   }).setView([21.037042159870733, 105.8358108494083], 16)
 
   map.value = mapInstance
+
+  // Thêm layer vào map
+  startEndLayer.value.addTo(mapInstance)
+  routeLayer.value.addTo(mapInstance)
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 17,
@@ -584,6 +646,10 @@ onMounted(() => {
 
   })
 
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 
 //Chia bang dia diem nha ve sinh cong cong
@@ -819,6 +885,34 @@ select {
     bottom: 4rem;
     right: 0;
     margin: 0;
+    width: 100%;
+    transform: translateY(0);
+  }
+
+  .routes-list.mobile-hidden {
+    transform: translateY(-100%);
+  }
+
+  .routes-header {
+    padding: 8px;
+    text-align: center;
+  }
+
+  .toggle-btn {
+    padding: 6px 12px;
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .toggle-btn:hover {
+    background: #555;
+  }
+
+  .routes-list ul {
+    text-align: center; /* Căn giữa tên tuyến đường */
   }
 }
 </style>
