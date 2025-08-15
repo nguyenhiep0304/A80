@@ -136,6 +136,10 @@
           <button class="showAll" @click="showAllRoutes">Hiển thị tất cả</button>
       </div>
 
+      <button v-if="displayMode === 'routes' && !isRouteListOpen" @click="isRouteListOpen = true">
+        Hiện danh sách tuyến đường
+      </button>
+
     <!-- DANH SÁCH TUYẾN ĐƯỜNG -->
     <!-- <div
       v-if="displayMode === 'routes'"
@@ -395,6 +399,7 @@ function showOnlyRoute(routeId) {
       routeLayer.value.addLayer(polyline)
     })
     showRouteStartEnd(route)
+    // handleRouteClick(route.id)
     selectedName.value = route.name
     selectedDescription.value = route.description
   }
@@ -419,6 +424,7 @@ function showImportantPoints() {
 
 //Hien tat ca tuyen duong
 function showAllRoutes() {
+  clearRouteAndMarkers()
   routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
   drawAllRoutes()
   showImportantPoints()
@@ -440,8 +446,17 @@ function showRouteStartEnd(route) {
   L.marker(lastSegment[lastSegment.length - 1], { icon: iconTapKet }).addTo(startEndLayer.value)
 }
 
+// Xóa hết tuyến đường + điểm đầu–cuối
+function clearRouteAndMarkers() {
+  routeLayer.value.clearLayers()
+  startEndLayer.value.clearLayers()
+}
+
 /* Click vào 1 item trong list (mobile sẽ tự thu gọn) */
-// function handleRouteClick (routeId) {
+// function handleRouteClick(routeId) {
+//   if (displayMode.value !== 'routes') {
+//     return
+//   }
 //   showOnlyRoute(routeId)
 //   if (isMobile.value) isRouteListOpen.value = false
 // }
@@ -704,6 +719,8 @@ watch(displayMode, (mode) => {
   //   }
   //   routeLayer.value.addTo(mapInstance)
   // } 
+
+  clearRouteAndMarkers() // Xóa hết tuyến đường và điểm đầu–cuối
 
   if (mode === 'toilets' && toiletLayer.value) {
     toiletLayer.value.addTo(mapInstance)
