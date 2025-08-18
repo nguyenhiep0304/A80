@@ -132,6 +132,12 @@
         </span>
       </div>
 
+      <!-- Ghi chú màu -->
+      <div v-show="isRouteListOpen" class="routes-legend">
+        <div><span class="legend-dot" style="background-color: #00b050;"></span> Tuyến đường tiến vào</div>
+        <div><span class="legend-dot" style="background-color: #ff0000;"></span> Tuyến đường rút</div>
+      </div>
+
       <ul v-show="isRouteListOpen">
         <li
           v-for="route in routeData"
@@ -947,6 +953,21 @@ select {
 
 .routes-list li:active {
   background: #e0f0ff;
+}
+
+.routes-legend {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 768px) {
