@@ -59,10 +59,10 @@
               <p v-else>Chọn một tuyến để xem chi tiết.</p>
             </div> -->
 
-            <!-- <div v-else-if="displayMode === 'routes' && selectedName">
+            <div v-else-if="displayMode === 'camxes' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
               <p style="margin: 4px 0 0;" v-html="selectedDescription"></p>
-            </div> -->
+            </div>
 
             <div v-else-if="displayMode === 'events' && selectedName">
               <h3 style="margin: 0;">{{ selectedName }}</h3>
@@ -118,27 +118,40 @@
     </div>
 
     <!-- Danh sách tuyến đường -->
-      <div v-if="displayMode === 'routes'" class="routes-list"
-        @mouseenter="map.scrollWheelZoom.disable()"
-        @mouseleave="map.scrollWheelZoom.enable()"
-      >
-        <div class="routes-header">Danh sách tuyến đường</div>
-        <ul>
-          <li
-            v-for="route in routeData"
-            :key="route.id"
-            @click="showOnlyRoute(route.id)"
-            style="cursor: pointer;"
-          >
-            {{ route.name }}
-          </li>
-        </ul>  
-          <button class="showAll" @click="showAllRoutes">Hiển thị tất cả</button>
+    <div 
+      v-if="displayMode === 'routes'" 
+      class="routes-list"
+      :class="{ open: isRouteListOpen }"
+      @mouseenter="map.scrollWheelZoom.disable()"
+      @mouseleave="map.scrollWheelZoom.enable()"
+    >
+      <div class="routes-header" @click="isRouteListOpen = !isRouteListOpen">
+        Danh sách tuyến đường
+        <span style="float: right; cursor: pointer;">
+          {{ isRouteListOpen ? '▼' : '▲' }}
+        </span>
       </div>
 
-      <button v-if="displayMode === 'routes' && !isRouteListOpen" @click="isRouteListOpen = true">
-        Hiện danh sách tuyến đường
+      <ul v-show="isRouteListOpen">
+        <li
+          v-for="route in routeData"
+          :key="route.id"
+          @click="showOnlyRoute(route.id)"
+          style="cursor: pointer;"
+        >
+          {{ route.name }}
+        </li>
+      </ul>  
+
+      <button 
+        class="showAll" 
+        v-show="isRouteListOpen"
+        @click="showAllRoutes"
+      >
+        Hiển thị tất cả
       </button>
+    </div>
+
 
     <!-- DANH SÁCH TUYẾN ĐƯỜNG -->
     <!-- <div
@@ -199,6 +212,7 @@ import toiletData from '../assets/data/toilets'
 import eventData from '../assets/data/events'
 import ledData from '../assets/data/leds'
 import routeData from '../assets/data/routes'
+import camData from '../assets/data/camxes'
 import phaoData from '../assets/data/phaos'
 import yteData from '../assets/data/ytes'
 
@@ -208,13 +222,16 @@ const displayModes = [
 
   { label: 'Tuyến đường diễu binh', value: 'routes' },
 
+  { label: 'Tuyến đường cấm xe', value: 'camxes' },
+
   { label: 'Điểm bắn pháo hoa', value: 'phaos' },
 
-  { label: 'Điểm xem trực tiếp', value: 'leds' },
+  { label: 'Điểm xem tốt nhất', value: 'leds' },
 
   { label: 'Điểm hỗ trợ y tế', value: 'ytes' },
 
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
+
 ]
 
 /* ---------- state chính ---------- */
@@ -237,7 +254,8 @@ const eventLayer = ref(null)
 const ledLayer = ref(null)
 const phaoLayer = ref(null)
 const yteLayer = ref(null)
-const routeLayer = ref(L.layerGroup())
+const camLayer = ref(L.layerGroup()) // Layer cho tuyến đường cấm xe
+const routeLayer = ref(L.layerGroup())//Layer cho tuyen duong dieu binh
 // Tạo layer chứa điểm đầu và cuối
 const startEndLayer = ref(L.layerGroup())
 
@@ -611,20 +629,44 @@ onMounted(() => {
       return marker
     })
   )
-  //Add routes
-  // routeData.forEach(route => {
-  //   const polyline = L.polyline(route.path, {
-  //     color: route.color,
-  //     weight: 5,
-  //     opacity: 0.8
-  //   })
-  //   polyline.on('click', () => {
-  //     selectedName.value = route.name,
-  //       selectedDescription.value = route.description.replace(/,\s*/g, '<br>')
-  //     showControlBar.value = true
-  //   })
-  //   routeLayer.value.addLayer(polyline)
-  // })
+  //Add cam routes
+  camData.forEach(c => {
+  // Nếu có nhiều đoạn (paths)
+  if (c.paths && Array.isArray(c.paths)) {
+    c.paths.forEach(segment => {
+      const polyline = L.polyline(segment.path, {
+        color: segment.color || c.color || "red",
+        weight: 5,
+        opacity: 0.8
+      })
+
+      polyline.on("click", () => {
+        selectedName.value = c.name
+        selectedDescription.value = c.description.replace(/; \s*/g, '<br>')
+        showControlBar.value = true
+      })
+
+      camLayer.value.addLayer(polyline)
+    })
+  } 
+  // Nếu chỉ có 1 đoạn (path)
+  else if (c.path && Array.isArray(c.path)) {
+    const polyline = L.polyline(c.path, {
+      color: c.color || "red",
+      weight: 5,
+      opacity: 0.8
+    })
+
+    polyline.on("click", () => {
+      selectedName.value = c.name
+      selectedDescription.value = c.description.replace(/; \s*/g, '<br>')
+      showControlBar.value = true
+    })
+
+    camLayer.value.addLayer(polyline)
+  }
+})
+
 
   //ADD routes update
   routeData.forEach(route => {
@@ -663,9 +705,9 @@ onMounted(() => {
 
 })
 
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkMobile)
-})
+// onBeforeUnmount(() => {
+//   window.removeEventListener('resize', checkMobile)
+// })
 
 //Chia bang dia diem nha ve sinh cong cong
 const toiletDescriptionTableRows = computed(() => {
@@ -701,13 +743,13 @@ watch(displayMode, (mode) => {
   
     // mapInstance.setView([21.037042159870733, 105.8358108494083], 16)
     // Chỉ định view và zoom theo chế độ
-  if (mode === 'phaos') {
+  if (mode === 'phaos' || mode === 'events') {
     mapInstance.setView([21.037042159870733, 105.8358108494083], 13) // zoom = 13
   } else {
     mapInstance.setView([21.037042159870733, 105.8358108494083], 16) // các chế độ khác zoom = 16
   }
-  
-  ;[toiletLayer.value, eventLayer.value, routeLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
+
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value, camLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -740,6 +782,8 @@ watch(displayMode, (mode) => {
     phaoLayer.value.addTo(mapInstance)
   } else if (mode === 'ytes' && yteLayer.value) {
     yteLayer.value.addTo(mapInstance)
+  } else if (mode === 'camxes' && camLayer.value) {
+    camLayer.value.addTo(mapInstance)
   }
 })
 </script>
@@ -863,6 +907,10 @@ select {
   font-family: Arial, sans-serif;
   z-index: 1000;
   border: 1px solid rgba(0,0,0,0.1);
+}
+
+.routes-list.open {
+  transform: translateY(0rem);
 }
 
 .routes-header {

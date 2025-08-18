@@ -18,7 +18,7 @@ export default [
         name: "Khu vực màn hình LIVE",
         lat: 21.033968496943896,
         lng: 105.81433974176923,
-        description: "UBND Quận Ba Đình",
+        description: "UBND Phường Ba Đình",
     },
     {
         id: 4,
