@@ -98,8 +98,6 @@
                 </tbody>
               </table>
             </div>
-
-            
             <p v-else-if="displayMode === 'events'">Đang hiển thị địa điểm sự kiện.</p>
             <!-- <p v-else-if="displayMode === 'routes'">Đang hiển thị tuyến đường sự kiện.</p> -->
             <p v-else-if="displayMode === 'phaos'">Đang hiển thị địa điểm bắn pháo hoa.</p>
@@ -157,46 +155,6 @@
         Hiển thị tất cả
       </button>
     </div>
-
-
-    <!-- DANH SÁCH TUYẾN ĐƯỜNG -->
-    <!-- <div
-      v-if="displayMode === 'routes'"
-      id="routes-list"
-      class="routes-list"
-      :class="{
-        'mobile-hidden': isMobile && !isRouteListOpen
-      }"
-      @mouseenter="map.scrollWheelZoom.disable()"
-      @mouseleave="map.scrollWheelZoom.enable()"
-      @touchstart="map.scrollWheelZoom.disable()"
-      @touchend="map.scrollWheelZoom.enable()"
-    >
-      <div class="routes-header">Danh sách tuyến đường</div>
-
-      <ul>
-        <li
-          v-for="route in routeData"
-          :key="route.id"
-          :class="{ active: selectedRouteId === route.id }"
-          @click="handleRouteClick(route.id)"
-        >
-          {{ route.name }}
-        </li>
-      </ul>
-        <button class="show-all-btn" @click="showAllRoutes">Hiển thị tất cả</button>
-    </div> -->
-
-    <!-- Nút hiển thị/ẩn danh sách tuyến đường (mobile) -->
-    <!-- <div
-      v-if="displayMode === 'routes' && isMobile"
-      class="routes-toggle-wrapper"
-    >
-      <button class="routes-toggle-btn" @click="toggleRoutesList">
-        {{ isRouteListOpen ? 'Thu gọn' : 'Hiện danh sách' }}
-      </button>
-    </div> -->
-
     <!-- button mobile -->
     <div class="leaflet-top leaflet-right">
       <div class="leaflet-control custom-dropdown">
@@ -221,7 +179,7 @@ import routeData from '../assets/data/routes'
 import camData from '../assets/data/camxes'
 import phaoData from '../assets/data/phaos'
 import yteData from '../assets/data/ytes'
-
+import doxeData from '../assets/data/doxes'
 
 const displayModes = [
   { label: 'Sự kiện biểu diễn', value: 'events' },
@@ -235,6 +193,9 @@ const displayModes = [
   { label: 'Điểm xem tốt nhất', value: 'leds' },
 
   { label: 'Điểm hỗ trợ y tế', value: 'ytes' },
+
+  // { label: 'Điểm đỗ xe', value: 'doxes' },
+  
 
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
 
@@ -260,6 +221,7 @@ const eventLayer = ref(null)
 const ledLayer = ref(null)
 const phaoLayer = ref(null)
 const yteLayer = ref(null)
+const doxeLayer = ref(null) // Layer cho điểm đỗ xe
 const camLayer = ref(L.layerGroup()) // Layer cho tuyến đường cấm xe
 const routeLayer = ref(L.layerGroup())//Layer cho tuyen duong dieu binh
 // Tạo layer chứa điểm đầu và cuối
@@ -318,7 +280,6 @@ const importantPoints = [
   { name: 'Công viên Thống Nhất', lat: 21.014706895670013, lng: 105.84400146999552, icon: iconThongNhat },
   { name: 'Công Viên Bách Thảo', lat: 21.040434538547547, lng: 105.8308594450715, icon: iconThongNhat },
 
-
   { name: 'Điểm tập kết Cung thể thao Quần Ngựa', lat:21.04045445844579, lng:  105.81615992750083, icon: iconTapKet },
   { name: 'Điểm tập kết Công viên Thống Nhất', lat: 21.017185064858552, lng: 105.8443765749404, icon: iconTapKet },
   { name: 'Điểm tập kết Nhà hát Lớn Hà Nội', lat: 21.02443620543749, lng: 105.85693453870182, icon: iconTapKet },
@@ -342,7 +303,6 @@ const toggleControlBar = () => {
 const hideControlBar = () => {
   showControlBar.value = false
 }
-
 
 //Icon wc
 const toiletIcon = L.icon({
@@ -379,10 +339,15 @@ const yteIcon = L.icon({
   iconAnchor: [16, 16],
   popupAnchor: [0, -32]
 })
+//Icon Do xe
+const doxeIcon = L.icon({
+  iconUrl: new URL('../assets/images/parking.png', import.meta.url).href,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+})
 
 /* ---------- helpers ---------- */
-// const toggleControlBar = () => { showControlBar.value = !showControlBar.value }
-// const hideControlBar = () => { showControlBar.value = false }
 
 function drawAllRoutes() {
   routeLayer.value.clearLayers() // Xóa các tuyến đường hiện tại
@@ -476,27 +441,7 @@ function clearRouteAndMarkers() {
   startEndLayer.value.clearLayers()
 }
 
-/* Click vào 1 item trong list (mobile sẽ tự thu gọn) */
-// function handleRouteClick(routeId) {
-//   if (displayMode.value !== 'routes') {
-//     return
-//   }
-//   showOnlyRoute(routeId)
-//   if (isMobile.value) isRouteListOpen.value = false
-// }
-
-/* Toggle list (mobile) */
-// function toggleRoutesList () {
-//   isRouteListOpen.value = !isRouteListOpen.value
-//   // sau khi DOM đổi, gắn lại guard chặn sự kiện chạm truyền xuống map
-//   nextTick(() => bindRouteListGuards())
-// }
-
 onMounted(() => {
-
-  // const check = () =>{isMobile.value = window.innerWidth <= 768}
-  // check()
-  // window.addEventListener('resize', check)
 
   const infoBox = document.querySelector('.info-box')
 
@@ -635,6 +580,18 @@ onMounted(() => {
       return marker
     })
   )
+  //Add do xe
+  doxeLayer.value = L.layerGroup(
+    doxeData.map((item) => {
+      const marker = L.marker([item.lat, item.lng], { icon: doxeIcon })
+      marker.on('click', () => {
+        selectedName.value = item.name
+        selectedDescription.value = item.description
+        showControlBar.value = true
+      })
+      return marker
+    })
+  )
   //Add cam routes
   camData.forEach(c => {
   // Nếu có nhiều đoạn (paths)
@@ -711,10 +668,6 @@ onMounted(() => {
 
 })
 
-// onBeforeUnmount(() => {
-//   window.removeEventListener('resize', checkMobile)
-// })
-
 //Chia bang dia diem nha ve sinh cong cong
 const toiletDescriptionTableRows = computed(() => {
   if (!selectedDescription.value) return []
@@ -755,7 +708,7 @@ watch(displayMode, (mode) => {
     mapInstance.setView([21.037042159870733, 105.8358108494083], 16) // các chế độ khác zoom = 16
   }
 
-  ;[toiletLayer.value, eventLayer.value, routeLayer.value, camLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value].forEach((layer) => {
+  ;[toiletLayer.value, eventLayer.value, routeLayer.value, camLayer.value, ledLayer.value, phaoLayer.value, yteLayer.value, doxeLayer.value].forEach((layer) => {
     if (layer && mapInstance.hasLayer(layer)) {
       mapInstance.removeLayer(layer)
     }
@@ -790,7 +743,9 @@ watch(displayMode, (mode) => {
     yteLayer.value.addTo(mapInstance)
   } else if (mode === 'camxes' && camLayer.value) {
     camLayer.value.addTo(mapInstance)
-  }
+  } else if (mode === 'doxes' && doxeLayer.value) {
+    doxeLayer.value.addTo(mapInstance)
+  } 
 })
 </script>
 

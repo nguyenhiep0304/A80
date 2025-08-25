@@ -18,7 +18,7 @@ export default [
         name: "Khu vực màn hình LIVE",
         lat: 21.033968496943896,
         lng: 105.81433974176923,
-        description: "UBND Phường Ba Đình",
+        description: "UBND Phường Ngọc Hà",
     },
     {
         id: 4,
@@ -116,7 +116,21 @@ export default [
         name: "Khu vực màn hình LIVE",
         lat: 21.08752526729934,
         lng: 105.86527969162412,
-        description: "Trung tâm triển lãm Quốc Gia - Đông Hội - Đông Anh - Hà Nội"
+        description: "Trung tâm hội chợ triển lãm quốc gia VEC"
     },
+    {
+        id: 18,
+        name: "Khu vực màn hình LIVE",
+        lat: 21.032334986134813,
+        lng: 105.83300962943603,
+        description: "61 Trần Phú (giao Lê Trực)"
+    },
+    {
+        id: 19,
+        name: "Khu vực màn hình LIVE",
+        lat: 21.017395463636827,
+        lng: 105.84691903885339,
+        description: "Tượng đài CAND (Trần Nhân Tông - Quang Trung)"
+    }
     
 ];
