@@ -194,8 +194,7 @@ const displayModes = [
 
   { label: 'Điểm hỗ trợ y tế', value: 'ytes' },
 
-  // { label: 'Điểm đỗ xe', value: 'doxes' },
-  
+  { label: 'Điểm đỗ xe', value: 'doxes' },  
 
   { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
 
@@ -587,6 +586,10 @@ onMounted(() => {
       marker.on('click', () => {
         selectedName.value = item.name
         selectedDescription.value = item.description
+        .replace(/Địa điểm:/g, '<strong>Địa điểm:</strong>')
+        .replace(/Sức chứa:/g, '<strong>Sức chứa:</strong>')
+        .replace(/Loại phương tiện:/g, '<strong>Loại phương tiện:</strong>')
+        .replace(/; \s*/g, '<br>')
         showControlBar.value = true
       })
       return marker
