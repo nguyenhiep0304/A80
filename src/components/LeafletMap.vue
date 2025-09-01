@@ -186,7 +186,7 @@ const displayModes = [
 
   { label: 'Tuyến đường diễu binh', value: 'routes' },
 
-  // { label: 'Tuyến đường cấm xe', value: 'camxes' },
+  { label: 'Tuyến đường cấm xe', value: 'camxes' },
 
   { label: 'Điểm bắn pháo hoa', value: 'phaos' },
 
@@ -196,7 +196,7 @@ const displayModes = [
 
   { label: 'Điểm đỗ xe', value: 'doxes' },  
 
-  { label: 'Điểm vệ sinh công cộng', value: 'toilets' },
+  { label: 'Điểm WC công cộng', value: 'toilets' },
 
 ]
 
