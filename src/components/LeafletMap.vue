@@ -186,7 +186,7 @@ const displayModes = [
 
   { label: 'Tuyến đường diễu binh', value: 'routes' },
 
-  { label: 'Tuyến đường cấm xe', value: 'camxes' },
+  // { label: 'Tuyến đường cấm xe', value: 'camxes' },
 
   { label: 'Điểm bắn pháo hoa', value: 'phaos' },
 
@@ -476,7 +476,7 @@ onMounted(() => {
   startEndLayer.value.addTo(mapInstance)
   routeLayer.value.addTo(mapInstance)
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
     maxZoom: 17,
     minZoom: 12,
   }).addTo(mapInstance)
