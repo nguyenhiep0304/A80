@@ -462,8 +462,8 @@ onMounted(() => {
   ])
 
   const mapInstance = L.map('map', {
-    // maxBounds: bounds,
-    // maxBoundsViscosity: 0.0, // Cản không cho ra ngoài, nhưng không bật lại
+    maxBounds: bounds,
+    maxBoundsViscosity: 0.0, // Cản không cho ra ngoài, nhưng không bật lại
     attributionControl: false, 
     zoomControl: false,
     maxZoom: 17,
